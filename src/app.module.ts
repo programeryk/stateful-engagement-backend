@@ -9,10 +9,12 @@ import { ToolsModule } from './tools/tools.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { RewardsModule } from './rewards/rewards.module';
 import { MeController } from './me/me.controller';
+import { MeService } from './me/me.service';
+import { MeModule } from './me/me.module';
 
 @Module({
-  imports: [UsersModule, EntitiesModule, StateModule, CheckinsModule, ToolsModule, InventoryModule, RewardsModule],
+  imports: [UsersModule, EntitiesModule, StateModule, CheckinsModule, ToolsModule, InventoryModule, RewardsModule, MeModule],
   controllers: [AppController, MeController],
-  providers: [AppService],
+  providers: [AppService, MeService],
 })
 export class AppModule {}
