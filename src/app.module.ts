@@ -11,9 +11,20 @@ import { RewardsModule } from './rewards/rewards.module';
 import { MeController } from './me/me.controller';
 import { MeService } from './me/me.service';
 import { MeModule } from './me/me.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [UsersModule, EntitiesModule, StateModule, CheckinsModule, ToolsModule, InventoryModule, RewardsModule, MeModule],
+  imports: [
+    PrismaModule,
+    UsersModule,
+    EntitiesModule,
+    StateModule,
+    CheckinsModule,
+    ToolsModule,
+    InventoryModule,
+    RewardsModule,
+    MeModule,
+  ],
   controllers: [AppController, MeController],
   providers: [AppService, MeService],
 })
