@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  email String? @unique
+  name  String?
+
+  entity   Entity?
+  checkIns DailyCheckIn[]
+}
+
+model Entity {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  state EntityState?
+}
+
+model EntityState {
+  id String @id @default(uuid())
+
+  entityId String @unique
+  entity   Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+
+  level   Int @default(1)
+  energy  Int @default(50)
+  loyalty Int @default(0)
+  fatigue Int @default(0)
+}
+
+model DailyCheckIn {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date      DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@unique([userId, date])
+}

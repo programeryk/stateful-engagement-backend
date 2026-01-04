@@ -7,6 +7,6 @@ export class CheckinsController {
   constructor(private readonly checkinsService: CheckinsService) {}
   @Post()
   postCheckIns(@UserId() userId: string) {
-    return this.checkinsService.getCheckIns(userId);
+    return this.checkinsService.postCheckIns(userId);
   }
 }
