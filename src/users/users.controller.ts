@@ -3,11 +3,5 @@ import { UserId } from 'src/common/user-id.decorator';
 
 @Controller('users')
 export class UsersController {
-  @Get('me')
-  getMe(@UserId() userId: string) {
-    return {
-      id: userId,
-      email: 'mock@local',
-    };
-  }
+ 
 }
