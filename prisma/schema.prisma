@@ -44,6 +44,8 @@ model EntityState {
   energy  Int @default(50)
   loyalty Int @default(0)
   fatigue Int @default(0)
+
+  streak Int @default(0)
 }
 
 model DailyCheckIn {

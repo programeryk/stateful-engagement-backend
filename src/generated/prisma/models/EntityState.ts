@@ -31,6 +31,7 @@ export type EntityStateAvgAggregateOutputType = {
   energy: number | null
   loyalty: number | null
   fatigue: number | null
+  streak: number | null
 }
 
 export type EntityStateSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type EntityStateSumAggregateOutputType = {
   energy: number | null
   loyalty: number | null
   fatigue: number | null
+  streak: number | null
 }
 
 export type EntityStateMinAggregateOutputType = {
@@ -47,6 +49,7 @@ export type EntityStateMinAggregateOutputType = {
   energy: number | null
   loyalty: number | null
   fatigue: number | null
+  streak: number | null
 }
 
 export type EntityStateMaxAggregateOutputType = {
@@ -56,6 +59,7 @@ export type EntityStateMaxAggregateOutputType = {
   energy: number | null
   loyalty: number | null
   fatigue: number | null
+  streak: number | null
 }
 
 export type EntityStateCountAggregateOutputType = {
@@ -65,6 +69,7 @@ export type EntityStateCountAggregateOutputType = {
   energy: number
   loyalty: number
   fatigue: number
+  streak: number
   _all: number
 }
 
@@ -74,6 +79,7 @@ export type EntityStateAvgAggregateInputType = {
   energy?: true
   loyalty?: true
   fatigue?: true
+  streak?: true
 }
 
 export type EntityStateSumAggregateInputType = {
@@ -81,6 +87,7 @@ export type EntityStateSumAggregateInputType = {
   energy?: true
   loyalty?: true
   fatigue?: true
+  streak?: true
 }
 
 export type EntityStateMinAggregateInputType = {
@@ -90,6 +97,7 @@ export type EntityStateMinAggregateInputType = {
   energy?: true
   loyalty?: true
   fatigue?: true
+  streak?: true
 }
 
 export type EntityStateMaxAggregateInputType = {
@@ -99,6 +107,7 @@ export type EntityStateMaxAggregateInputType = {
   energy?: true
   loyalty?: true
   fatigue?: true
+  streak?: true
 }
 
 export type EntityStateCountAggregateInputType = {
@@ -108,6 +117,7 @@ export type EntityStateCountAggregateInputType = {
   energy?: true
   loyalty?: true
   fatigue?: true
+  streak?: true
   _all?: true
 }
 
@@ -204,6 +214,7 @@ export type EntityStateGroupByOutputType = {
   energy: number
   loyalty: number
   fatigue: number
+  streak: number
   _count: EntityStateCountAggregateOutputType | null
   _avg: EntityStateAvgAggregateOutputType | null
   _sum: EntityStateSumAggregateOutputType | null
@@ -236,6 +247,7 @@ export type EntityStateWhereInput = {
   energy?: Prisma.IntFilter<"EntityState"> | number
   loyalty?: Prisma.IntFilter<"EntityState"> | number
   fatigue?: Prisma.IntFilter<"EntityState"> | number
+  streak?: Prisma.IntFilter<"EntityState"> | number
   entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
 }
 
@@ -246,6 +258,7 @@ export type EntityStateOrderByWithRelationInput = {
   energy?: Prisma.SortOrder
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
   entity?: Prisma.EntityOrderByWithRelationInput
 }
 
@@ -259,6 +272,7 @@ export type EntityStateWhereUniqueInput = Prisma.AtLeast<{
   energy?: Prisma.IntFilter<"EntityState"> | number
   loyalty?: Prisma.IntFilter<"EntityState"> | number
   fatigue?: Prisma.IntFilter<"EntityState"> | number
+  streak?: Prisma.IntFilter<"EntityState"> | number
   entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
 }, "id" | "entityId">
 
@@ -269,6 +283,7 @@ export type EntityStateOrderByWithAggregationInput = {
   energy?: Prisma.SortOrder
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
   _count?: Prisma.EntityStateCountOrderByAggregateInput
   _avg?: Prisma.EntityStateAvgOrderByAggregateInput
   _max?: Prisma.EntityStateMaxOrderByAggregateInput
@@ -286,6 +301,7 @@ export type EntityStateScalarWhereWithAggregatesInput = {
   energy?: Prisma.IntWithAggregatesFilter<"EntityState"> | number
   loyalty?: Prisma.IntWithAggregatesFilter<"EntityState"> | number
   fatigue?: Prisma.IntWithAggregatesFilter<"EntityState"> | number
+  streak?: Prisma.IntWithAggregatesFilter<"EntityState"> | number
 }
 
 export type EntityStateCreateInput = {
@@ -294,6 +310,7 @@ export type EntityStateCreateInput = {
   energy?: number
   loyalty?: number
   fatigue?: number
+  streak?: number
   entity: Prisma.EntityCreateNestedOneWithoutStateInput
 }
 
@@ -304,6 +321,7 @@ export type EntityStateUncheckedCreateInput = {
   energy?: number
   loyalty?: number
   fatigue?: number
+  streak?: number
 }
 
 export type EntityStateUpdateInput = {
@@ -312,6 +330,7 @@ export type EntityStateUpdateInput = {
   energy?: Prisma.IntFieldUpdateOperationsInput | number
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
   entity?: Prisma.EntityUpdateOneRequiredWithoutStateNestedInput
 }
 
@@ -322,6 +341,7 @@ export type EntityStateUncheckedUpdateInput = {
   energy?: Prisma.IntFieldUpdateOperationsInput | number
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type EntityStateCreateManyInput = {
@@ -331,6 +351,7 @@ export type EntityStateCreateManyInput = {
   energy?: number
   loyalty?: number
   fatigue?: number
+  streak?: number
 }
 
 export type EntityStateUpdateManyMutationInput = {
@@ -339,6 +360,7 @@ export type EntityStateUpdateManyMutationInput = {
   energy?: Prisma.IntFieldUpdateOperationsInput | number
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type EntityStateUncheckedUpdateManyInput = {
@@ -348,6 +370,7 @@ export type EntityStateUncheckedUpdateManyInput = {
   energy?: Prisma.IntFieldUpdateOperationsInput | number
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type EntityStateNullableScalarRelationFilter = {
@@ -362,6 +385,7 @@ export type EntityStateCountOrderByAggregateInput = {
   energy?: Prisma.SortOrder
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
 }
 
 export type EntityStateAvgOrderByAggregateInput = {
@@ -369,6 +393,7 @@ export type EntityStateAvgOrderByAggregateInput = {
   energy?: Prisma.SortOrder
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
 }
 
 export type EntityStateMaxOrderByAggregateInput = {
@@ -378,6 +403,7 @@ export type EntityStateMaxOrderByAggregateInput = {
   energy?: Prisma.SortOrder
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
 }
 
 export type EntityStateMinOrderByAggregateInput = {
@@ -387,6 +413,7 @@ export type EntityStateMinOrderByAggregateInput = {
   energy?: Prisma.SortOrder
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
 }
 
 export type EntityStateSumOrderByAggregateInput = {
@@ -394,6 +421,7 @@ export type EntityStateSumOrderByAggregateInput = {
   energy?: Prisma.SortOrder
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
+  streak?: Prisma.SortOrder
 }
 
 export type EntityStateCreateNestedOneWithoutEntityInput = {
@@ -442,6 +470,7 @@ export type EntityStateCreateWithoutEntityInput = {
   energy?: number
   loyalty?: number
   fatigue?: number
+  streak?: number
 }
 
 export type EntityStateUncheckedCreateWithoutEntityInput = {
@@ -450,6 +479,7 @@ export type EntityStateUncheckedCreateWithoutEntityInput = {
   energy?: number
   loyalty?: number
   fatigue?: number
+  streak?: number
 }
 
 export type EntityStateCreateOrConnectWithoutEntityInput = {
@@ -474,6 +504,7 @@ export type EntityStateUpdateWithoutEntityInput = {
   energy?: Prisma.IntFieldUpdateOperationsInput | number
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type EntityStateUncheckedUpdateWithoutEntityInput = {
@@ -482,6 +513,7 @@ export type EntityStateUncheckedUpdateWithoutEntityInput = {
   energy?: Prisma.IntFieldUpdateOperationsInput | number
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
+  streak?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -493,6 +525,7 @@ export type EntityStateSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   energy?: boolean
   loyalty?: boolean
   fatigue?: boolean
+  streak?: boolean
   entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["entityState"]>
 
@@ -503,6 +536,7 @@ export type EntityStateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   energy?: boolean
   loyalty?: boolean
   fatigue?: boolean
+  streak?: boolean
   entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["entityState"]>
 
@@ -513,6 +547,7 @@ export type EntityStateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   energy?: boolean
   loyalty?: boolean
   fatigue?: boolean
+  streak?: boolean
   entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["entityState"]>
 
@@ -523,9 +558,10 @@ export type EntityStateSelectScalar = {
   energy?: boolean
   loyalty?: boolean
   fatigue?: boolean
+  streak?: boolean
 }
 
-export type EntityStateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "entityId" | "level" | "energy" | "loyalty" | "fatigue", ExtArgs["result"]["entityState"]>
+export type EntityStateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "entityId" | "level" | "energy" | "loyalty" | "fatigue" | "streak", ExtArgs["result"]["entityState"]>
 export type EntityStateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
 }
@@ -548,6 +584,7 @@ export type $EntityStatePayload<ExtArgs extends runtime.Types.Extensions.Interna
     energy: number
     loyalty: number
     fatigue: number
+    streak: number
   }, ExtArgs["result"]["entityState"]>
   composites: {}
 }
@@ -978,6 +1015,7 @@ export interface EntityStateFieldRefs {
   readonly energy: Prisma.FieldRef<"EntityState", 'Int'>
   readonly loyalty: Prisma.FieldRef<"EntityState", 'Int'>
   readonly fatigue: Prisma.FieldRef<"EntityState", 'Int'>
+  readonly streak: Prisma.FieldRef<"EntityState", 'Int'>
 }
     
 

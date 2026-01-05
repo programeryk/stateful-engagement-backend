@@ -97,7 +97,8 @@ export const EntityStateScalarFieldEnum = {
   level: 'level',
   energy: 'energy',
   loyalty: 'loyalty',
-  fatigue: 'fatigue'
+  fatigue: 'fatigue',
+  streak: 'streak'
 } as const
 
 export type EntityStateScalarFieldEnum = (typeof EntityStateScalarFieldEnum)[keyof typeof EntityStateScalarFieldEnum]
