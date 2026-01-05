@@ -11,12 +11,8 @@ export class EntitiesService {
       include: { state: true },
     });
 
-    if (!entity) {
+    if (!entity || !entity.state)
       throw new NotFoundException('entity not found');
-    }
-    if (!entity.state) {
-      throw new NotFoundException('state not found');
-    }
 
     return entity.state;
   }
