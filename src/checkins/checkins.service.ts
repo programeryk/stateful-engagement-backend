@@ -14,29 +14,33 @@ export class CheckinsService {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    const exists = await this.prisma.dailyCheckIn.findUnique({
-      where: { userId_date: { userId, date: yesterday } },
-    });
-
-    const entity = await this.prisma.entity.findUnique({
-      where: { userId },
-      include: { state: true },
-    });
-    if (!entity) {
-      throw new NotFoundException('call /me first');
-    }
     try {
-      const checkIn = await this.prisma.dailyCheckIn.create({
-        data: { userId, date: today },
+      const result = await this.prisma.$transaction(async (tx) => {
+        const entity = await tx.entity.findUnique({
+          where: { userId },
+          include: { state: true },
+        });
+        if (!entity || !entity.state)
+          throw new NotFoundException('call /me first');
+
+        const checkIn = await tx.dailyCheckIn.create({
+          data: { userId, date: today },
+        });
+
+        const exists = await tx.dailyCheckIn.findUnique({
+          where: { userId_date: { userId, date: yesterday } },
+        });
+
+        const newStreak = exists ? entity.state.streak + 1 : 1;
+
+        const state = await tx.entityState.update({
+          where: { entityId: entity.id },
+          data: { streak: newStreak },
+        });
+
+        return { ok: true, checkIn, streak: state.streak };
       });
-
-      if (exists) {
-        entity!.state!.streak += 1;
-      } else {
-        state!.streak = 1;
-      }
-
-      return { ok: true, checkIn };
+      return result;
     } catch (err: any) {
       if (err?.code === 'P2002') {
         throw new ConflictException('already checked in today.');
