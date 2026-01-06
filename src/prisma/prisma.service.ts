@@ -7,6 +7,6 @@ export class PrismaService extends PrismaClient {
   constructor() {
     const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
     super({ adapter });
-    console.log('DATAABASE_URL = ', process.env.DATABASE_URL);
+    console.log('DATABASE_URL = ', process.env.DATABASE_URL);
   }
 }

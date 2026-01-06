@@ -37,3 +37,13 @@ export type EntityState = Prisma.EntityStateModel
  * 
  */
 export type DailyCheckIn = Prisma.DailyCheckInModel
+/**
+ * Model Reward
+ * 
+ */
+export type Reward = Prisma.RewardModel
+/**
+ * Model UserRewards
+ * 
+ */
+export type UserRewards = Prisma.UserRewardsModel
