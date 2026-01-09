@@ -15,20 +15,29 @@ export class RewardsService {
     const rewards = await this.prisma.reward.findMany();
     const userRewards = await this.prisma.userRewards.findMany({
       where: { userId },
-      select: { rewardId: true}
+      select: { rewardId: true },
     });
-    for (const reward of rewards) {
-      let unlocked = false;
-      let claimed = false;
-      if (entity.state.streak >= reward.threshold) {
-        unlocked = true;
-      }
-    }
+    const claimedIds = new Set(userRewards.map((r) => r.rewardId));
+    const rewardsWithStatus = rewards.map((reward) => {
+      const unlocked =
+        reward.type === 'streak'
+          ? entity.state!.streak >= reward.threshold
+          : false; // later add "level" etc.
+
+      const claimed = claimedIds.has(reward.id);
+      return {
+        id: reward.id,
+        title: reward.title,
+        description: reward.description,
+        type: reward.type,
+        threshold: reward.threshold,
+        unlocked,
+        claimed,
+      };
+    });
     return {
       userId,
-      locked: [{ id: 'streak_3', title: '3-day streak' }],
-      unlocked: [],
-      claimed: [],
+      rewards: rewardsWithStatus,
     };
   }
 }
