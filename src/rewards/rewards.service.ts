@@ -40,4 +40,12 @@ export class RewardsService {
       rewards: rewardsWithStatus,
     };
   }
+
+  async claimRewards(userId: string, rewardId: string) {
+    const entity = await this.prisma.entity.findUnique({
+      where: { userId },
+      include: { state: true },
+    });
+    if (!entity || !entity.state) throw new NotFoundException('call /me first');
+  }
 }
