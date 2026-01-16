@@ -74,5 +74,6 @@ export class RewardsService {
       }
       throw err;
     }
+    return {ok: true, rewardId}
   }
 }
