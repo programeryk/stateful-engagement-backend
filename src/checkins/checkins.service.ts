@@ -17,10 +17,6 @@ export class CheckinsService {
     try {
       //using transaction so that either both state and streak update or fail.
       const result = await this.prisma.$transaction(async (tx) => {
-        const checkIn = await tx.dailyCheckIn.create({
-          data: { userId, date: today },
-        });
-
         const entity = await tx.entity.findUnique({
           where: { userId },
           include: { state: true },
@@ -28,11 +24,15 @@ export class CheckinsService {
         if (!entity || !entity.state)
           throw new NotFoundException('call /me first');
 
+        const checkIn = await tx.dailyCheckIn.create({
+          data: { userId, date: today },
+        });
+
         const exists = await tx.dailyCheckIn.findUnique({
           where: { userId_date: { userId, date: yesterday } },
         });
         const newStreak = exists ? entity.state.streak + 1 : 1;
-        
+
         const state = await tx.entityState.update({
           where: { entityId: entity.id },
           data: { streak: newStreak },
