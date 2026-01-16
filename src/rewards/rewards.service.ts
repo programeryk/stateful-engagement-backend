@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -47,5 +51,26 @@ export class RewardsService {
       include: { state: true },
     });
     if (!entity || !entity.state) throw new NotFoundException('call /me first');
+    const reward = await this.prisma.reward.findUnique({
+      where: { id: rewardId },
+    });
+    if (!reward) throw new NotFoundException('reward not found');
+    const alreadyClaimed = await this.prisma.userRewards.findUnique({
+      where: {
+        userId_rewardId: {
+          userId,
+          rewardId,
+        },
+      },
+    });
+    if (alreadyClaimed) {
+      throw new ConflictException('reward already claimed');
+    }
+    await this.prisma.userRewards.create({
+      data: {
+        userId,
+        rewardId,
+      },
+    });
   }
 }
