@@ -55,22 +55,24 @@ export class RewardsService {
       where: { id: rewardId },
     });
     if (!reward) throw new NotFoundException('reward not found');
-    const alreadyClaimed = await this.prisma.userRewards.findUnique({
-      where: {
-        userId_rewardId: {
-          userId,
-          rewardId,
-        },
-      },
-    });
-    if (alreadyClaimed) {
-      throw new ConflictException('reward already claimed');
+    const unlocked =
+      reward.type === 'streak'
+        ? entity.state.streak >= reward.threshold
+        : false;
+
+    if (!unlocked) {
+      throw new ConflictException('reward not yet unlocked');
     }
-    await this.prisma.userRewards.create({
-      data: {
-        userId,
-        rewardId,
-      },
-    });
+
+    try {
+      await this.prisma.userRewards.create({
+        data: { userId, rewardId },
+      });
+    } catch (err: any) {
+      if (err?.code === 'P2002') {
+        throw new ConflictException('reward already claimed');
+      }
+      throw err;
+    }
   }
 }
