@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -51,29 +52,32 @@ export class RewardsService {
       include: { state: true },
     });
     if (!entity || !entity.state) throw new NotFoundException('call /me first');
+
     const reward = await this.prisma.reward.findUnique({
       where: { id: rewardId },
     });
     if (!reward) throw new NotFoundException('reward not found');
+
     const unlocked =
       reward.type === 'streak'
         ? entity.state.streak >= reward.threshold
         : false;
 
     if (!unlocked) {
-      throw new ConflictException('reward not yet unlocked');
+      throw new ForbiddenException('reward not yet unlocked');
     }
 
     try {
-      await this.prisma.userRewards.create({
+      const claimed = await this.prisma.userRewards.create({
         data: { userId, rewardId },
       });
+
+      return { ok: true, claimed };
     } catch (err: any) {
       if (err?.code === 'P2002') {
         throw new ConflictException('reward already claimed');
       }
       throw err;
     }
-    return {ok: true, rewardId}
   }
 }

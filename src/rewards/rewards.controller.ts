@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { UserId } from '../common/user-id.decorator';
 import { RewardsService } from './rewards.service';
 
@@ -9,8 +9,8 @@ export class RewardsController {
   getRewards(@UserId() userId: string) {
     return this.rewardsService.getRewards(userId);
   }
-  @Post(':id/claim')
-  postRewards(@UserId() userId: string, rewardId: string) {
+  @Post(':rewardId/claim')
+  claimReward(@UserId() userId: string, @Param('rewardId') rewardId: string) {
     return this.rewardsService.claimRewards(userId, rewardId);
   }
 }
