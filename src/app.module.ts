@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { EntitiesModule } from './entities/entities.module';
 import { StateModule } from './state/state.module';
 import { CheckinsModule } from './checkins/checkins.module';
 import { ToolsModule } from './tools/tools.module';
@@ -17,7 +16,6 @@ import { PrismaModule } from './prisma/prisma.module';
   imports: [
     PrismaModule,
     UsersModule,
-    EntitiesModule,
     StateModule,
     CheckinsModule,
     ToolsModule,
