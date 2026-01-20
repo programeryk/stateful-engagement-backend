@@ -21,15 +21,13 @@ model User {
   email String? @unique
   name  String?
 
-  state    UserState?
-  checkIns DailyCheckIn[]
-
-  rewards UserRewards[]
+  state          UserState?
+  checkIns       DailyCheckIn[]
+  appliedRewards AppliedReward[]
 }
 
 model UserState {
-  id String @id @default(uuid())
-
+  id     String @id @default(uuid())
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -37,7 +35,9 @@ model UserState {
   energy  Int @default(50)
   loyalty Int @default(0)
   fatigue Int @default(0)
-  streak  Int @default(0)
+
+  streak    Int @default(0)
+  streakRun Int @default(0)
 
   updatedAt DateTime @updatedAt
 }
@@ -52,33 +52,30 @@ model DailyCheckIn {
   createdAt DateTime @default(now())
 
   @@unique([userId, date])
+  @@index([userId])
 }
 
 model Reward {
-  id String @id @default(uuid())
-
+  id          String  @id
   title       String
   description String?
+  type        String // "streak"
+  threshold   Int
+  effects     Json? // e.g. {"loyalty": 50, "energy": 10}
 
-  type      String // "streak" | "level"
-  threshold Int
-
-  effects Json?
-
-  userRewards UserRewards[]
+  applied AppliedReward[]
 }
 
-model UserRewards {
-  id String @id @default(uuid())
-
-  userId   String
-  rewardId String
-
-  claimedAt DateTime @default(now())
+model AppliedReward {
+  id        String   @id @default(uuid())
+  userId    String
+  rewardId  String
+  appliedAt DateTime @default(now())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   reward Reward @relation(fields: [rewardId], references: [id], onDelete: Cascade)
 
   @@unique([userId, rewardId])
   @@index([userId])
+  @@index([rewardId])
 }
