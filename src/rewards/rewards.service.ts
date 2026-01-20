@@ -14,68 +14,36 @@ export class RewardsService {
     const userState = await this.prisma.userState.findUnique({
       where: { userId },
     });
-    if (!userState || !userState) throw new NotFoundException('call /me first');
+    if (!userState) throw new NotFoundException('call /me first');
 
     const rewards = await this.prisma.reward.findMany();
-    const userRewards = await this.prisma.userRewards.findMany({
+
+    const applied = await this.prisma.appliedReward.findMany({
       where: { userId },
       select: { rewardId: true },
     });
-    const claimedIds = new Set(userRewards.map((r) => r.rewardId));
-    const rewardsWithStatus = rewards.map((reward) => {
-      const unlocked =
-        reward.type === 'streak'
-          ? userState!.streak >= reward.threshold
-          : false; // later add "level" etc.
 
-      const claimed = claimedIds.has(reward.id);
+    const appliedIds = new Set(applied.map((r) => r.rewardId));
+
+    const rewardsWithStatus = rewards.map((reward) => {
+      const unlockedNow =
+        reward.type === 'streak'
+          ? userState.streak >= reward.threshold
+          : false;
+
+      const appliedEver = appliedIds.has(reward.id);
+
       return {
         id: reward.id,
         title: reward.title,
         description: reward.description,
         type: reward.type,
         threshold: reward.threshold,
-        unlocked,
-        claimed,
+        unlockedNow,
+        appliedEver,
       };
     });
-    return {
-      userId,
-      rewards: rewardsWithStatus,
-    };
-  }
 
-  async claimRewards(userId: string, rewardId: string) {
-    const userState = await this.prisma.userState.findUnique({
-      where: { userId },
-    });
-    if (!userState) throw new NotFoundException('call /me first');
-
-    const reward = await this.prisma.reward.findUnique({
-      where: { id: rewardId },
-    });
-    if (!reward) throw new NotFoundException('reward not found');
-
-    const unlocked =
-      reward.type === 'streak'
-        ? userState.streak >= reward.threshold
-        : false;
-
-    if (!unlocked) {
-      throw new ForbiddenException('reward not yet unlocked');
-    }
-
-    try {
-      const claimed = await this.prisma.userRewards.create({
-        data: { userId, rewardId },
-      });
-
-      return { ok: true, claimed };
-    } catch (err: any) {
-      if (err?.code === 'P2002') {
-        throw new ConflictException('reward already claimed');
-      }
-      throw err;
-    }
+    return { userId, rewards: rewardsWithStatus };
   }
 }

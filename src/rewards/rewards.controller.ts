@@ -9,8 +9,4 @@ export class RewardsController {
   getRewards(@UserId() userId: string) {
     return this.rewardsService.getRewards(userId);
   }
-  @Post(':rewardId/claim')
-  claimReward(@UserId() userId: string, @Param('rewardId') rewardId: string) {
-    return this.rewardsService.claimRewards(userId, rewardId);
-  }
 }
