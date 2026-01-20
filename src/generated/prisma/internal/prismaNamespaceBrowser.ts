@@ -55,7 +55,7 @@ export const ModelName = {
   UserState: 'UserState',
   DailyCheckIn: 'DailyCheckIn',
   Reward: 'Reward',
-  UserRewards: 'UserRewards'
+  AppliedReward: 'AppliedReward'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -92,6 +92,7 @@ export const UserStateScalarFieldEnum = {
   loyalty: 'loyalty',
   fatigue: 'fatigue',
   streak: 'streak',
+  streakRun: 'streakRun',
   updatedAt: 'updatedAt'
 } as const
 
@@ -120,14 +121,14 @@ export const RewardScalarFieldEnum = {
 export type RewardScalarFieldEnum = (typeof RewardScalarFieldEnum)[keyof typeof RewardScalarFieldEnum]
 
 
-export const UserRewardsScalarFieldEnum = {
+export const AppliedRewardScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   rewardId: 'rewardId',
-  claimedAt: 'claimedAt'
+  appliedAt: 'appliedAt'
 } as const
 
-export type UserRewardsScalarFieldEnum = (typeof UserRewardsScalarFieldEnum)[keyof typeof UserRewardsScalarFieldEnum]
+export type AppliedRewardScalarFieldEnum = (typeof AppliedRewardScalarFieldEnum)[keyof typeof AppliedRewardScalarFieldEnum]
 
 
 export const SortOrder = {

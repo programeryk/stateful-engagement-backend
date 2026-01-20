@@ -220,7 +220,7 @@ export type RewardWhereInput = {
   type?: Prisma.StringFilter<"Reward"> | string
   threshold?: Prisma.IntFilter<"Reward"> | number
   effects?: Prisma.JsonNullableFilter<"Reward">
-  userRewards?: Prisma.UserRewardsListRelationFilter
+  applied?: Prisma.AppliedRewardListRelationFilter
 }
 
 export type RewardOrderByWithRelationInput = {
@@ -230,7 +230,7 @@ export type RewardOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   threshold?: Prisma.SortOrder
   effects?: Prisma.SortOrderInput | Prisma.SortOrder
-  userRewards?: Prisma.UserRewardsOrderByRelationAggregateInput
+  applied?: Prisma.AppliedRewardOrderByRelationAggregateInput
 }
 
 export type RewardWhereUniqueInput = Prisma.AtLeast<{
@@ -243,7 +243,7 @@ export type RewardWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"Reward"> | string
   threshold?: Prisma.IntFilter<"Reward"> | number
   effects?: Prisma.JsonNullableFilter<"Reward">
-  userRewards?: Prisma.UserRewardsListRelationFilter
+  applied?: Prisma.AppliedRewardListRelationFilter
 }, "id">
 
 export type RewardOrderByWithAggregationInput = {
@@ -273,23 +273,23 @@ export type RewardScalarWhereWithAggregatesInput = {
 }
 
 export type RewardCreateInput = {
-  id?: string
+  id: string
   title: string
   description?: string | null
   type: string
   threshold: number
   effects?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  userRewards?: Prisma.UserRewardsCreateNestedManyWithoutRewardInput
+  applied?: Prisma.AppliedRewardCreateNestedManyWithoutRewardInput
 }
 
 export type RewardUncheckedCreateInput = {
-  id?: string
+  id: string
   title: string
   description?: string | null
   type: string
   threshold: number
   effects?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  userRewards?: Prisma.UserRewardsUncheckedCreateNestedManyWithoutRewardInput
+  applied?: Prisma.AppliedRewardUncheckedCreateNestedManyWithoutRewardInput
 }
 
 export type RewardUpdateInput = {
@@ -299,7 +299,7 @@ export type RewardUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   threshold?: Prisma.IntFieldUpdateOperationsInput | number
   effects?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  userRewards?: Prisma.UserRewardsUpdateManyWithoutRewardNestedInput
+  applied?: Prisma.AppliedRewardUpdateManyWithoutRewardNestedInput
 }
 
 export type RewardUncheckedUpdateInput = {
@@ -309,11 +309,11 @@ export type RewardUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   threshold?: Prisma.IntFieldUpdateOperationsInput | number
   effects?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  userRewards?: Prisma.UserRewardsUncheckedUpdateManyWithoutRewardNestedInput
+  applied?: Prisma.AppliedRewardUncheckedUpdateManyWithoutRewardNestedInput
 }
 
 export type RewardCreateManyInput = {
-  id?: string
+  id: string
   title: string
   description?: string | null
   type: string
@@ -377,22 +377,22 @@ export type RewardScalarRelationFilter = {
   isNot?: Prisma.RewardWhereInput
 }
 
-export type RewardCreateNestedOneWithoutUserRewardsInput = {
-  create?: Prisma.XOR<Prisma.RewardCreateWithoutUserRewardsInput, Prisma.RewardUncheckedCreateWithoutUserRewardsInput>
-  connectOrCreate?: Prisma.RewardCreateOrConnectWithoutUserRewardsInput
+export type RewardCreateNestedOneWithoutAppliedInput = {
+  create?: Prisma.XOR<Prisma.RewardCreateWithoutAppliedInput, Prisma.RewardUncheckedCreateWithoutAppliedInput>
+  connectOrCreate?: Prisma.RewardCreateOrConnectWithoutAppliedInput
   connect?: Prisma.RewardWhereUniqueInput
 }
 
-export type RewardUpdateOneRequiredWithoutUserRewardsNestedInput = {
-  create?: Prisma.XOR<Prisma.RewardCreateWithoutUserRewardsInput, Prisma.RewardUncheckedCreateWithoutUserRewardsInput>
-  connectOrCreate?: Prisma.RewardCreateOrConnectWithoutUserRewardsInput
-  upsert?: Prisma.RewardUpsertWithoutUserRewardsInput
+export type RewardUpdateOneRequiredWithoutAppliedNestedInput = {
+  create?: Prisma.XOR<Prisma.RewardCreateWithoutAppliedInput, Prisma.RewardUncheckedCreateWithoutAppliedInput>
+  connectOrCreate?: Prisma.RewardCreateOrConnectWithoutAppliedInput
+  upsert?: Prisma.RewardUpsertWithoutAppliedInput
   connect?: Prisma.RewardWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.RewardUpdateToOneWithWhereWithoutUserRewardsInput, Prisma.RewardUpdateWithoutUserRewardsInput>, Prisma.RewardUncheckedUpdateWithoutUserRewardsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RewardUpdateToOneWithWhereWithoutAppliedInput, Prisma.RewardUpdateWithoutAppliedInput>, Prisma.RewardUncheckedUpdateWithoutAppliedInput>
 }
 
-export type RewardCreateWithoutUserRewardsInput = {
-  id?: string
+export type RewardCreateWithoutAppliedInput = {
+  id: string
   title: string
   description?: string | null
   type: string
@@ -400,8 +400,8 @@ export type RewardCreateWithoutUserRewardsInput = {
   effects?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
-export type RewardUncheckedCreateWithoutUserRewardsInput = {
-  id?: string
+export type RewardUncheckedCreateWithoutAppliedInput = {
+  id: string
   title: string
   description?: string | null
   type: string
@@ -409,23 +409,23 @@ export type RewardUncheckedCreateWithoutUserRewardsInput = {
   effects?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
-export type RewardCreateOrConnectWithoutUserRewardsInput = {
+export type RewardCreateOrConnectWithoutAppliedInput = {
   where: Prisma.RewardWhereUniqueInput
-  create: Prisma.XOR<Prisma.RewardCreateWithoutUserRewardsInput, Prisma.RewardUncheckedCreateWithoutUserRewardsInput>
+  create: Prisma.XOR<Prisma.RewardCreateWithoutAppliedInput, Prisma.RewardUncheckedCreateWithoutAppliedInput>
 }
 
-export type RewardUpsertWithoutUserRewardsInput = {
-  update: Prisma.XOR<Prisma.RewardUpdateWithoutUserRewardsInput, Prisma.RewardUncheckedUpdateWithoutUserRewardsInput>
-  create: Prisma.XOR<Prisma.RewardCreateWithoutUserRewardsInput, Prisma.RewardUncheckedCreateWithoutUserRewardsInput>
+export type RewardUpsertWithoutAppliedInput = {
+  update: Prisma.XOR<Prisma.RewardUpdateWithoutAppliedInput, Prisma.RewardUncheckedUpdateWithoutAppliedInput>
+  create: Prisma.XOR<Prisma.RewardCreateWithoutAppliedInput, Prisma.RewardUncheckedCreateWithoutAppliedInput>
   where?: Prisma.RewardWhereInput
 }
 
-export type RewardUpdateToOneWithWhereWithoutUserRewardsInput = {
+export type RewardUpdateToOneWithWhereWithoutAppliedInput = {
   where?: Prisma.RewardWhereInput
-  data: Prisma.XOR<Prisma.RewardUpdateWithoutUserRewardsInput, Prisma.RewardUncheckedUpdateWithoutUserRewardsInput>
+  data: Prisma.XOR<Prisma.RewardUpdateWithoutAppliedInput, Prisma.RewardUncheckedUpdateWithoutAppliedInput>
 }
 
-export type RewardUpdateWithoutUserRewardsInput = {
+export type RewardUpdateWithoutAppliedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -434,7 +434,7 @@ export type RewardUpdateWithoutUserRewardsInput = {
   effects?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
-export type RewardUncheckedUpdateWithoutUserRewardsInput = {
+export type RewardUncheckedUpdateWithoutAppliedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -449,11 +449,11 @@ export type RewardUncheckedUpdateWithoutUserRewardsInput = {
  */
 
 export type RewardCountOutputType = {
-  userRewards: number
+  applied: number
 }
 
 export type RewardCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  userRewards?: boolean | RewardCountOutputTypeCountUserRewardsArgs
+  applied?: boolean | RewardCountOutputTypeCountAppliedArgs
 }
 
 /**
@@ -469,8 +469,8 @@ export type RewardCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
 /**
  * RewardCountOutputType without action
  */
-export type RewardCountOutputTypeCountUserRewardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserRewardsWhereInput
+export type RewardCountOutputTypeCountAppliedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AppliedRewardWhereInput
 }
 
 
@@ -481,7 +481,7 @@ export type RewardSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   type?: boolean
   threshold?: boolean
   effects?: boolean
-  userRewards?: boolean | Prisma.Reward$userRewardsArgs<ExtArgs>
+  applied?: boolean | Prisma.Reward$appliedArgs<ExtArgs>
   _count?: boolean | Prisma.RewardCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reward"]>
 
@@ -514,7 +514,7 @@ export type RewardSelectScalar = {
 
 export type RewardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "threshold" | "effects", ExtArgs["result"]["reward"]>
 export type RewardInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  userRewards?: boolean | Prisma.Reward$userRewardsArgs<ExtArgs>
+  applied?: boolean | Prisma.Reward$appliedArgs<ExtArgs>
   _count?: boolean | Prisma.RewardCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RewardIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -523,7 +523,7 @@ export type RewardIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type $RewardPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Reward"
   objects: {
-    userRewards: Prisma.$UserRewardsPayload<ExtArgs>[]
+    applied: Prisma.$AppliedRewardPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -926,7 +926,7 @@ readonly fields: RewardFieldRefs;
  */
 export interface Prisma__RewardClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  userRewards<T extends Prisma.Reward$userRewardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Reward$userRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRewardsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  applied<T extends Prisma.Reward$appliedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Reward$appliedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppliedRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1350,27 +1350,27 @@ export type RewardDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Reward.userRewards
+ * Reward.applied
  */
-export type Reward$userRewardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Reward$appliedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the UserRewards
+   * Select specific fields to fetch from the AppliedReward
    */
-  select?: Prisma.UserRewardsSelect<ExtArgs> | null
+  select?: Prisma.AppliedRewardSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the UserRewards
+   * Omit specific fields from the AppliedReward
    */
-  omit?: Prisma.UserRewardsOmit<ExtArgs> | null
+  omit?: Prisma.AppliedRewardOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserRewardsInclude<ExtArgs> | null
-  where?: Prisma.UserRewardsWhereInput
-  orderBy?: Prisma.UserRewardsOrderByWithRelationInput | Prisma.UserRewardsOrderByWithRelationInput[]
-  cursor?: Prisma.UserRewardsWhereUniqueInput
+  include?: Prisma.AppliedRewardInclude<ExtArgs> | null
+  where?: Prisma.AppliedRewardWhereInput
+  orderBy?: Prisma.AppliedRewardOrderByWithRelationInput | Prisma.AppliedRewardOrderByWithRelationInput[]
+  cursor?: Prisma.AppliedRewardWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.UserRewardsScalarFieldEnum | Prisma.UserRewardsScalarFieldEnum[]
+  distinct?: Prisma.AppliedRewardScalarFieldEnum | Prisma.AppliedRewardScalarFieldEnum[]
 }
 
 /**

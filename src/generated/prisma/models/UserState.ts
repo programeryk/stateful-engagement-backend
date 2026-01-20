@@ -32,6 +32,7 @@ export type UserStateAvgAggregateOutputType = {
   loyalty: number | null
   fatigue: number | null
   streak: number | null
+  streakRun: number | null
 }
 
 export type UserStateSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type UserStateSumAggregateOutputType = {
   loyalty: number | null
   fatigue: number | null
   streak: number | null
+  streakRun: number | null
 }
 
 export type UserStateMinAggregateOutputType = {
@@ -50,6 +52,7 @@ export type UserStateMinAggregateOutputType = {
   loyalty: number | null
   fatigue: number | null
   streak: number | null
+  streakRun: number | null
   updatedAt: Date | null
 }
 
@@ -61,6 +64,7 @@ export type UserStateMaxAggregateOutputType = {
   loyalty: number | null
   fatigue: number | null
   streak: number | null
+  streakRun: number | null
   updatedAt: Date | null
 }
 
@@ -72,6 +76,7 @@ export type UserStateCountAggregateOutputType = {
   loyalty: number
   fatigue: number
   streak: number
+  streakRun: number
   updatedAt: number
   _all: number
 }
@@ -83,6 +88,7 @@ export type UserStateAvgAggregateInputType = {
   loyalty?: true
   fatigue?: true
   streak?: true
+  streakRun?: true
 }
 
 export type UserStateSumAggregateInputType = {
@@ -91,6 +97,7 @@ export type UserStateSumAggregateInputType = {
   loyalty?: true
   fatigue?: true
   streak?: true
+  streakRun?: true
 }
 
 export type UserStateMinAggregateInputType = {
@@ -101,6 +108,7 @@ export type UserStateMinAggregateInputType = {
   loyalty?: true
   fatigue?: true
   streak?: true
+  streakRun?: true
   updatedAt?: true
 }
 
@@ -112,6 +120,7 @@ export type UserStateMaxAggregateInputType = {
   loyalty?: true
   fatigue?: true
   streak?: true
+  streakRun?: true
   updatedAt?: true
 }
 
@@ -123,6 +132,7 @@ export type UserStateCountAggregateInputType = {
   loyalty?: true
   fatigue?: true
   streak?: true
+  streakRun?: true
   updatedAt?: true
   _all?: true
 }
@@ -221,6 +231,7 @@ export type UserStateGroupByOutputType = {
   loyalty: number
   fatigue: number
   streak: number
+  streakRun: number
   updatedAt: Date
   _count: UserStateCountAggregateOutputType | null
   _avg: UserStateAvgAggregateOutputType | null
@@ -255,6 +266,7 @@ export type UserStateWhereInput = {
   loyalty?: Prisma.IntFilter<"UserState"> | number
   fatigue?: Prisma.IntFilter<"UserState"> | number
   streak?: Prisma.IntFilter<"UserState"> | number
+  streakRun?: Prisma.IntFilter<"UserState"> | number
   updatedAt?: Prisma.DateTimeFilter<"UserState"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -267,6 +279,7 @@ export type UserStateOrderByWithRelationInput = {
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
   streak?: Prisma.SortOrder
+  streakRun?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -282,6 +295,7 @@ export type UserStateWhereUniqueInput = Prisma.AtLeast<{
   loyalty?: Prisma.IntFilter<"UserState"> | number
   fatigue?: Prisma.IntFilter<"UserState"> | number
   streak?: Prisma.IntFilter<"UserState"> | number
+  streakRun?: Prisma.IntFilter<"UserState"> | number
   updatedAt?: Prisma.DateTimeFilter<"UserState"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId">
@@ -294,6 +308,7 @@ export type UserStateOrderByWithAggregationInput = {
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
   streak?: Prisma.SortOrder
+  streakRun?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserStateCountOrderByAggregateInput
   _avg?: Prisma.UserStateAvgOrderByAggregateInput
@@ -313,6 +328,7 @@ export type UserStateScalarWhereWithAggregatesInput = {
   loyalty?: Prisma.IntWithAggregatesFilter<"UserState"> | number
   fatigue?: Prisma.IntWithAggregatesFilter<"UserState"> | number
   streak?: Prisma.IntWithAggregatesFilter<"UserState"> | number
+  streakRun?: Prisma.IntWithAggregatesFilter<"UserState"> | number
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserState"> | Date | string
 }
 
@@ -323,6 +339,7 @@ export type UserStateCreateInput = {
   loyalty?: number
   fatigue?: number
   streak?: number
+  streakRun?: number
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStateInput
 }
@@ -335,6 +352,7 @@ export type UserStateUncheckedCreateInput = {
   loyalty?: number
   fatigue?: number
   streak?: number
+  streakRun?: number
   updatedAt?: Date | string
 }
 
@@ -345,6 +363,7 @@ export type UserStateUpdateInput = {
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
   streak?: Prisma.IntFieldUpdateOperationsInput | number
+  streakRun?: Prisma.IntFieldUpdateOperationsInput | number
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStateNestedInput
 }
@@ -357,6 +376,7 @@ export type UserStateUncheckedUpdateInput = {
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
   streak?: Prisma.IntFieldUpdateOperationsInput | number
+  streakRun?: Prisma.IntFieldUpdateOperationsInput | number
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -368,6 +388,7 @@ export type UserStateCreateManyInput = {
   loyalty?: number
   fatigue?: number
   streak?: number
+  streakRun?: number
   updatedAt?: Date | string
 }
 
@@ -378,6 +399,7 @@ export type UserStateUpdateManyMutationInput = {
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
   streak?: Prisma.IntFieldUpdateOperationsInput | number
+  streakRun?: Prisma.IntFieldUpdateOperationsInput | number
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -389,6 +411,7 @@ export type UserStateUncheckedUpdateManyInput = {
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
   streak?: Prisma.IntFieldUpdateOperationsInput | number
+  streakRun?: Prisma.IntFieldUpdateOperationsInput | number
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -405,6 +428,7 @@ export type UserStateCountOrderByAggregateInput = {
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
   streak?: Prisma.SortOrder
+  streakRun?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -414,6 +438,7 @@ export type UserStateAvgOrderByAggregateInput = {
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
   streak?: Prisma.SortOrder
+  streakRun?: Prisma.SortOrder
 }
 
 export type UserStateMaxOrderByAggregateInput = {
@@ -424,6 +449,7 @@ export type UserStateMaxOrderByAggregateInput = {
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
   streak?: Prisma.SortOrder
+  streakRun?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -435,6 +461,7 @@ export type UserStateMinOrderByAggregateInput = {
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
   streak?: Prisma.SortOrder
+  streakRun?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -444,6 +471,7 @@ export type UserStateSumOrderByAggregateInput = {
   loyalty?: Prisma.SortOrder
   fatigue?: Prisma.SortOrder
   streak?: Prisma.SortOrder
+  streakRun?: Prisma.SortOrder
 }
 
 export type UserStateCreateNestedOneWithoutUserInput = {
@@ -493,6 +521,7 @@ export type UserStateCreateWithoutUserInput = {
   loyalty?: number
   fatigue?: number
   streak?: number
+  streakRun?: number
   updatedAt?: Date | string
 }
 
@@ -503,6 +532,7 @@ export type UserStateUncheckedCreateWithoutUserInput = {
   loyalty?: number
   fatigue?: number
   streak?: number
+  streakRun?: number
   updatedAt?: Date | string
 }
 
@@ -529,6 +559,7 @@ export type UserStateUpdateWithoutUserInput = {
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
   streak?: Prisma.IntFieldUpdateOperationsInput | number
+  streakRun?: Prisma.IntFieldUpdateOperationsInput | number
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -539,6 +570,7 @@ export type UserStateUncheckedUpdateWithoutUserInput = {
   loyalty?: Prisma.IntFieldUpdateOperationsInput | number
   fatigue?: Prisma.IntFieldUpdateOperationsInput | number
   streak?: Prisma.IntFieldUpdateOperationsInput | number
+  streakRun?: Prisma.IntFieldUpdateOperationsInput | number
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -552,6 +584,7 @@ export type UserStateSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   loyalty?: boolean
   fatigue?: boolean
   streak?: boolean
+  streakRun?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userState"]>
@@ -564,6 +597,7 @@ export type UserStateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   loyalty?: boolean
   fatigue?: boolean
   streak?: boolean
+  streakRun?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userState"]>
@@ -576,6 +610,7 @@ export type UserStateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   loyalty?: boolean
   fatigue?: boolean
   streak?: boolean
+  streakRun?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userState"]>
@@ -588,10 +623,11 @@ export type UserStateSelectScalar = {
   loyalty?: boolean
   fatigue?: boolean
   streak?: boolean
+  streakRun?: boolean
   updatedAt?: boolean
 }
 
-export type UserStateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "level" | "energy" | "loyalty" | "fatigue" | "streak" | "updatedAt", ExtArgs["result"]["userState"]>
+export type UserStateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "level" | "energy" | "loyalty" | "fatigue" | "streak" | "streakRun" | "updatedAt", ExtArgs["result"]["userState"]>
 export type UserStateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -615,6 +651,7 @@ export type $UserStatePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     loyalty: number
     fatigue: number
     streak: number
+    streakRun: number
     updatedAt: Date
   }, ExtArgs["result"]["userState"]>
   composites: {}
@@ -1047,6 +1084,7 @@ export interface UserStateFieldRefs {
   readonly loyalty: Prisma.FieldRef<"UserState", 'Int'>
   readonly fatigue: Prisma.FieldRef<"UserState", 'Int'>
   readonly streak: Prisma.FieldRef<"UserState", 'Int'>
+  readonly streakRun: Prisma.FieldRef<"UserState", 'Int'>
   readonly updatedAt: Prisma.FieldRef<"UserState", 'DateTime'>
 }
     

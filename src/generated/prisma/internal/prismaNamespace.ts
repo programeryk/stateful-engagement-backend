@@ -388,7 +388,7 @@ export const ModelName = {
   UserState: 'UserState',
   DailyCheckIn: 'DailyCheckIn',
   Reward: 'Reward',
-  UserRewards: 'UserRewards'
+  AppliedReward: 'AppliedReward'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userState" | "dailyCheckIn" | "reward" | "userRewards"
+    modelProps: "user" | "userState" | "dailyCheckIn" | "reward" | "appliedReward"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -704,77 +704,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    UserRewards: {
-      payload: Prisma.$UserRewardsPayload<ExtArgs>
-      fields: Prisma.UserRewardsFieldRefs
+    AppliedReward: {
+      payload: Prisma.$AppliedRewardPayload<ExtArgs>
+      fields: Prisma.AppliedRewardFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.UserRewardsFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload> | null
+          args: Prisma.AppliedRewardFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.UserRewardsFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>
+          args: Prisma.AppliedRewardFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>
         }
         findFirst: {
-          args: Prisma.UserRewardsFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload> | null
+          args: Prisma.AppliedRewardFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.UserRewardsFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>
+          args: Prisma.AppliedRewardFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>
         }
         findMany: {
-          args: Prisma.UserRewardsFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>[]
+          args: Prisma.AppliedRewardFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>[]
         }
         create: {
-          args: Prisma.UserRewardsCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>
+          args: Prisma.AppliedRewardCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>
         }
         createMany: {
-          args: Prisma.UserRewardsCreateManyArgs<ExtArgs>
+          args: Prisma.AppliedRewardCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.UserRewardsCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>[]
+          args: Prisma.AppliedRewardCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>[]
         }
         delete: {
-          args: Prisma.UserRewardsDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>
+          args: Prisma.AppliedRewardDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>
         }
         update: {
-          args: Prisma.UserRewardsUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>
+          args: Prisma.AppliedRewardUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>
         }
         deleteMany: {
-          args: Prisma.UserRewardsDeleteManyArgs<ExtArgs>
+          args: Prisma.AppliedRewardDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.UserRewardsUpdateManyArgs<ExtArgs>
+          args: Prisma.AppliedRewardUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.UserRewardsUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>[]
+          args: Prisma.AppliedRewardUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>[]
         }
         upsert: {
-          args: Prisma.UserRewardsUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserRewardsPayload>
+          args: Prisma.AppliedRewardUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppliedRewardPayload>
         }
         aggregate: {
-          args: Prisma.UserRewardsAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateUserRewards>
+          args: Prisma.AppliedRewardAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAppliedReward>
         }
         groupBy: {
-          args: Prisma.UserRewardsGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserRewardsGroupByOutputType>[]
+          args: Prisma.AppliedRewardGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppliedRewardGroupByOutputType>[]
         }
         count: {
-          args: Prisma.UserRewardsCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserRewardsCountAggregateOutputType> | number
+          args: Prisma.AppliedRewardCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppliedRewardCountAggregateOutputType> | number
         }
       }
     }
@@ -835,6 +835,7 @@ export const UserStateScalarFieldEnum = {
   loyalty: 'loyalty',
   fatigue: 'fatigue',
   streak: 'streak',
+  streakRun: 'streakRun',
   updatedAt: 'updatedAt'
 } as const
 
@@ -863,14 +864,14 @@ export const RewardScalarFieldEnum = {
 export type RewardScalarFieldEnum = (typeof RewardScalarFieldEnum)[keyof typeof RewardScalarFieldEnum]
 
 
-export const UserRewardsScalarFieldEnum = {
+export const AppliedRewardScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   rewardId: 'rewardId',
-  claimedAt: 'claimedAt'
+  appliedAt: 'appliedAt'
 } as const
 
-export type UserRewardsScalarFieldEnum = (typeof UserRewardsScalarFieldEnum)[keyof typeof UserRewardsScalarFieldEnum]
+export type AppliedRewardScalarFieldEnum = (typeof AppliedRewardScalarFieldEnum)[keyof typeof AppliedRewardScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1088,7 +1089,7 @@ export type GlobalOmitConfig = {
   userState?: Prisma.UserStateOmit
   dailyCheckIn?: Prisma.DailyCheckInOmit
   reward?: Prisma.RewardOmit
-  userRewards?: Prisma.UserRewardsOmit
+  appliedReward?: Prisma.AppliedRewardOmit
 }
 
 /* Types for Logging */

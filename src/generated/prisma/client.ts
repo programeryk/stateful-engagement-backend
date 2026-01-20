@@ -58,7 +58,7 @@ export type DailyCheckIn = Prisma.DailyCheckInModel
  */
 export type Reward = Prisma.RewardModel
 /**
- * Model UserRewards
+ * Model AppliedReward
  * 
  */
-export type UserRewards = Prisma.UserRewardsModel
+export type AppliedReward = Prisma.AppliedRewardModel
