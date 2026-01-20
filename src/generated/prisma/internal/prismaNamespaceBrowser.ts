@@ -52,8 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Entity: 'Entity',
-  EntityState: 'EntityState',
+  UserState: 'UserState',
   DailyCheckIn: 'DailyCheckIn',
   Reward: 'Reward',
   UserRewards: 'UserRewards'
@@ -85,25 +84,18 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const EntityScalarFieldEnum = {
+export const UserStateScalarFieldEnum = {
   id: 'id',
-  userId: 'userId'
-} as const
-
-export type EntityScalarFieldEnum = (typeof EntityScalarFieldEnum)[keyof typeof EntityScalarFieldEnum]
-
-
-export const EntityStateScalarFieldEnum = {
-  id: 'id',
-  entityId: 'entityId',
+  userId: 'userId',
   level: 'level',
   energy: 'energy',
   loyalty: 'loyalty',
   fatigue: 'fatigue',
-  streak: 'streak'
+  streak: 'streak',
+  updatedAt: 'updatedAt'
 } as const
 
-export type EntityStateScalarFieldEnum = (typeof EntityStateScalarFieldEnum)[keyof typeof EntityStateScalarFieldEnum]
+export type UserStateScalarFieldEnum = (typeof UserStateScalarFieldEnum)[keyof typeof UserStateScalarFieldEnum]
 
 
 export const DailyCheckInScalarFieldEnum = {

@@ -11,21 +11,12 @@ export class MeService {
       update: {},
       create: { id: userId },
     });
-    const entity = await this.prisma.entity.upsert({
+    const state = await this.prisma.userState.upsert({
       where: { userId },
       update: {},
       create: { userId },
     });
-    const state = await this.prisma.entityState.upsert({
-      where: { entityId: entity.id },
-      update: {},
-      create: { entityId: entity.id },
-    });
 
-    return {
-      user,
-      entity,
-      state,
-    };
+    return { user, state };
   }
 }

@@ -11,11 +11,10 @@ export class RewardsService {
   constructor(private prisma: PrismaService) {}
 
   async getRewards(userId: string) {
-    const entity = await this.prisma.entity.findUnique({
+    const userState = await this.prisma.userState.findUnique({
       where: { userId },
-      include: { state: true },
     });
-    if (!entity || !entity.state) throw new NotFoundException('call /me first');
+    if (!userState || !userState) throw new NotFoundException('call /me first');
 
     const rewards = await this.prisma.reward.findMany();
     const userRewards = await this.prisma.userRewards.findMany({
@@ -26,7 +25,7 @@ export class RewardsService {
     const rewardsWithStatus = rewards.map((reward) => {
       const unlocked =
         reward.type === 'streak'
-          ? entity.state!.streak >= reward.threshold
+          ? userState!.streak >= reward.threshold
           : false; // later add "level" etc.
 
       const claimed = claimedIds.has(reward.id);
@@ -47,11 +46,10 @@ export class RewardsService {
   }
 
   async claimRewards(userId: string, rewardId: string) {
-    const entity = await this.prisma.entity.findUnique({
+    const userState = await this.prisma.userState.findUnique({
       where: { userId },
-      include: { state: true },
     });
-    if (!entity || !entity.state) throw new NotFoundException('call /me first');
+    if (!userState) throw new NotFoundException('call /me first');
 
     const reward = await this.prisma.reward.findUnique({
       where: { id: rewardId },
@@ -60,7 +58,7 @@ export class RewardsService {
 
     const unlocked =
       reward.type === 'streak'
-        ? entity.state.streak >= reward.threshold
+        ? userState.streak >= reward.threshold
         : false;
 
     if (!unlocked) {

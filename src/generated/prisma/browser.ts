@@ -23,15 +23,10 @@ export * from './enums.js';
  */
 export type User = Prisma.UserModel
 /**
- * Model Entity
+ * Model UserState
  * 
  */
-export type Entity = Prisma.EntityModel
-/**
- * Model EntityState
- * 
- */
-export type EntityState = Prisma.EntityStateModel
+export type UserState = Prisma.UserStateModel
 /**
  * Model DailyCheckIn
  * 

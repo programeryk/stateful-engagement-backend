@@ -174,7 +174,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   email?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringNullableFilter<"User"> | string | null
-  entity?: Prisma.XOR<Prisma.EntityNullableScalarRelationFilter, Prisma.EntityWhereInput> | null
+  state?: Prisma.XOR<Prisma.UserStateNullableScalarRelationFilter, Prisma.UserStateWhereInput> | null
   checkIns?: Prisma.DailyCheckInListRelationFilter
   rewards?: Prisma.UserRewardsListRelationFilter
 }
@@ -184,7 +184,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
-  entity?: Prisma.EntityOrderByWithRelationInput
+  state?: Prisma.UserStateOrderByWithRelationInput
   checkIns?: Prisma.DailyCheckInOrderByRelationAggregateInput
   rewards?: Prisma.UserRewardsOrderByRelationAggregateInput
 }
@@ -197,7 +197,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
-  entity?: Prisma.XOR<Prisma.EntityNullableScalarRelationFilter, Prisma.EntityWhereInput> | null
+  state?: Prisma.XOR<Prisma.UserStateNullableScalarRelationFilter, Prisma.UserStateWhereInput> | null
   checkIns?: Prisma.DailyCheckInListRelationFilter
   rewards?: Prisma.UserRewardsListRelationFilter
 }, "id" | "email">
@@ -227,7 +227,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   email?: string | null
   name?: string | null
-  entity?: Prisma.EntityCreateNestedOneWithoutUserInput
+  state?: Prisma.UserStateCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardsCreateNestedManyWithoutUserInput
 }
@@ -237,7 +237,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   email?: string | null
   name?: string | null
-  entity?: Prisma.EntityUncheckedCreateNestedOneWithoutUserInput
+  state?: Prisma.UserStateUncheckedCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardsUncheckedCreateNestedManyWithoutUserInput
 }
@@ -247,7 +247,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entity?: Prisma.EntityUpdateOneWithoutUserNestedInput
+  state?: Prisma.UserStateUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardsUpdateManyWithoutUserNestedInput
 }
@@ -257,7 +257,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entity?: Prisma.EntityUncheckedUpdateOneWithoutUserNestedInput
+  state?: Prisma.UserStateUncheckedUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardsUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -321,18 +321,18 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type UserCreateNestedOneWithoutEntityInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutEntityInput, Prisma.UserUncheckedCreateWithoutEntityInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEntityInput
+export type UserCreateNestedOneWithoutStateInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStateInput, Prisma.UserUncheckedCreateWithoutStateInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStateInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutEntityNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutEntityInput, Prisma.UserUncheckedCreateWithoutEntityInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEntityInput
-  upsert?: Prisma.UserUpsertWithoutEntityInput
+export type UserUpdateOneRequiredWithoutStateNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStateInput, Prisma.UserUncheckedCreateWithoutStateInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStateInput
+  upsert?: Prisma.UserUpsertWithoutStateInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEntityInput, Prisma.UserUpdateWithoutEntityInput>, Prisma.UserUncheckedUpdateWithoutEntityInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStateInput, Prisma.UserUpdateWithoutStateInput>, Prisma.UserUncheckedUpdateWithoutStateInput>
 }
 
 export type UserCreateNestedOneWithoutCheckInsInput = {
@@ -363,7 +363,7 @@ export type UserUpdateOneRequiredWithoutRewardsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRewardsInput, Prisma.UserUpdateWithoutRewardsInput>, Prisma.UserUncheckedUpdateWithoutRewardsInput>
 }
 
-export type UserCreateWithoutEntityInput = {
+export type UserCreateWithoutStateInput = {
   id?: string
   createdAt?: Date | string
   email?: string | null
@@ -372,7 +372,7 @@ export type UserCreateWithoutEntityInput = {
   rewards?: Prisma.UserRewardsCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutEntityInput = {
+export type UserUncheckedCreateWithoutStateInput = {
   id?: string
   createdAt?: Date | string
   email?: string | null
@@ -381,23 +381,23 @@ export type UserUncheckedCreateWithoutEntityInput = {
   rewards?: Prisma.UserRewardsUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutEntityInput = {
+export type UserCreateOrConnectWithoutStateInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutEntityInput, Prisma.UserUncheckedCreateWithoutEntityInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStateInput, Prisma.UserUncheckedCreateWithoutStateInput>
 }
 
-export type UserUpsertWithoutEntityInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutEntityInput, Prisma.UserUncheckedUpdateWithoutEntityInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutEntityInput, Prisma.UserUncheckedCreateWithoutEntityInput>
+export type UserUpsertWithoutStateInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStateInput, Prisma.UserUncheckedUpdateWithoutStateInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStateInput, Prisma.UserUncheckedCreateWithoutStateInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutEntityInput = {
+export type UserUpdateToOneWithWhereWithoutStateInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutEntityInput, Prisma.UserUncheckedUpdateWithoutEntityInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStateInput, Prisma.UserUncheckedUpdateWithoutStateInput>
 }
 
-export type UserUpdateWithoutEntityInput = {
+export type UserUpdateWithoutStateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -406,7 +406,7 @@ export type UserUpdateWithoutEntityInput = {
   rewards?: Prisma.UserRewardsUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutEntityInput = {
+export type UserUncheckedUpdateWithoutStateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -420,7 +420,7 @@ export type UserCreateWithoutCheckInsInput = {
   createdAt?: Date | string
   email?: string | null
   name?: string | null
-  entity?: Prisma.EntityCreateNestedOneWithoutUserInput
+  state?: Prisma.UserStateCreateNestedOneWithoutUserInput
   rewards?: Prisma.UserRewardsCreateNestedManyWithoutUserInput
 }
 
@@ -429,7 +429,7 @@ export type UserUncheckedCreateWithoutCheckInsInput = {
   createdAt?: Date | string
   email?: string | null
   name?: string | null
-  entity?: Prisma.EntityUncheckedCreateNestedOneWithoutUserInput
+  state?: Prisma.UserStateUncheckedCreateNestedOneWithoutUserInput
   rewards?: Prisma.UserRewardsUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -454,7 +454,7 @@ export type UserUpdateWithoutCheckInsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entity?: Prisma.EntityUpdateOneWithoutUserNestedInput
+  state?: Prisma.UserStateUpdateOneWithoutUserNestedInput
   rewards?: Prisma.UserRewardsUpdateManyWithoutUserNestedInput
 }
 
@@ -463,7 +463,7 @@ export type UserUncheckedUpdateWithoutCheckInsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entity?: Prisma.EntityUncheckedUpdateOneWithoutUserNestedInput
+  state?: Prisma.UserStateUncheckedUpdateOneWithoutUserNestedInput
   rewards?: Prisma.UserRewardsUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -472,7 +472,7 @@ export type UserCreateWithoutRewardsInput = {
   createdAt?: Date | string
   email?: string | null
   name?: string | null
-  entity?: Prisma.EntityCreateNestedOneWithoutUserInput
+  state?: Prisma.UserStateCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInCreateNestedManyWithoutUserInput
 }
 
@@ -481,7 +481,7 @@ export type UserUncheckedCreateWithoutRewardsInput = {
   createdAt?: Date | string
   email?: string | null
   name?: string | null
-  entity?: Prisma.EntityUncheckedCreateNestedOneWithoutUserInput
+  state?: Prisma.UserStateUncheckedCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -506,7 +506,7 @@ export type UserUpdateWithoutRewardsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entity?: Prisma.EntityUpdateOneWithoutUserNestedInput
+  state?: Prisma.UserStateUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUpdateManyWithoutUserNestedInput
 }
 
@@ -515,7 +515,7 @@ export type UserUncheckedUpdateWithoutRewardsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  entity?: Prisma.EntityUncheckedUpdateOneWithoutUserNestedInput
+  state?: Prisma.UserStateUncheckedUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -564,7 +564,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   email?: boolean
   name?: boolean
-  entity?: boolean | Prisma.User$entityArgs<ExtArgs>
+  state?: boolean | Prisma.User$stateArgs<ExtArgs>
   checkIns?: boolean | Prisma.User$checkInsArgs<ExtArgs>
   rewards?: boolean | Prisma.User$rewardsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -593,7 +593,7 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "email" | "name", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  entity?: boolean | Prisma.User$entityArgs<ExtArgs>
+  state?: boolean | Prisma.User$stateArgs<ExtArgs>
   checkIns?: boolean | Prisma.User$checkInsArgs<ExtArgs>
   rewards?: boolean | Prisma.User$rewardsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -604,7 +604,7 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    entity: Prisma.$EntityPayload<ExtArgs> | null
+    state: Prisma.$UserStatePayload<ExtArgs> | null
     checkIns: Prisma.$DailyCheckInPayload<ExtArgs>[]
     rewards: Prisma.$UserRewardsPayload<ExtArgs>[]
   }
@@ -1007,7 +1007,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  entity<T extends Prisma.User$entityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$entityArgs<ExtArgs>>): Prisma.Prisma__EntityClient<runtime.Types.Result.GetResult<Prisma.$EntityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  state<T extends Prisma.User$stateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$stateArgs<ExtArgs>>): Prisma.Prisma__UserStateClient<runtime.Types.Result.GetResult<Prisma.$UserStatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   checkIns<T extends Prisma.User$checkInsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$checkInsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyCheckInPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rewards<T extends Prisma.User$rewardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rewardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRewardsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1431,22 +1431,22 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.entity
+ * User.state
  */
-export type User$entityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$stateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Entity
+   * Select specific fields to fetch from the UserState
    */
-  select?: Prisma.EntitySelect<ExtArgs> | null
+  select?: Prisma.UserStateSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Entity
+   * Omit specific fields from the UserState
    */
-  omit?: Prisma.EntityOmit<ExtArgs> | null
+  omit?: Prisma.UserStateOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EntityInclude<ExtArgs> | null
-  where?: Prisma.EntityWhereInput
+  include?: Prisma.UserStateInclude<ExtArgs> | null
+  where?: Prisma.UserStateWhereInput
 }
 
 /**

@@ -385,8 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
-  Entity: 'Entity',
-  EntityState: 'EntityState',
+  UserState: 'UserState',
   DailyCheckIn: 'DailyCheckIn',
   Reward: 'Reward',
   UserRewards: 'UserRewards'
@@ -405,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "entity" | "entityState" | "dailyCheckIn" | "reward" | "userRewards"
+    modelProps: "user" | "userState" | "dailyCheckIn" | "reward" | "userRewards"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -483,151 +482,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Entity: {
-      payload: Prisma.$EntityPayload<ExtArgs>
-      fields: Prisma.EntityFieldRefs
+    UserState: {
+      payload: Prisma.$UserStatePayload<ExtArgs>
+      fields: Prisma.UserStateFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.EntityFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload> | null
+          args: Prisma.UserStateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.EntityFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
+          args: Prisma.UserStateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>
         }
         findFirst: {
-          args: Prisma.EntityFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload> | null
+          args: Prisma.UserStateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.EntityFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
+          args: Prisma.UserStateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>
         }
         findMany: {
-          args: Prisma.EntityFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>[]
+          args: Prisma.UserStateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>[]
         }
         create: {
-          args: Prisma.EntityCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
+          args: Prisma.UserStateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>
         }
         createMany: {
-          args: Prisma.EntityCreateManyArgs<ExtArgs>
+          args: Prisma.UserStateCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.EntityCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>[]
+          args: Prisma.UserStateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>[]
         }
         delete: {
-          args: Prisma.EntityDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
+          args: Prisma.UserStateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>
         }
         update: {
-          args: Prisma.EntityUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
+          args: Prisma.UserStateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>
         }
         deleteMany: {
-          args: Prisma.EntityDeleteManyArgs<ExtArgs>
+          args: Prisma.UserStateDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.EntityUpdateManyArgs<ExtArgs>
+          args: Prisma.UserStateUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.EntityUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>[]
+          args: Prisma.UserStateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>[]
         }
         upsert: {
-          args: Prisma.EntityUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
+          args: Prisma.UserStateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatePayload>
         }
         aggregate: {
-          args: Prisma.EntityAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateEntity>
+          args: Prisma.UserStateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserState>
         }
         groupBy: {
-          args: Prisma.EntityGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EntityGroupByOutputType>[]
+          args: Prisma.UserStateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserStateGroupByOutputType>[]
         }
         count: {
-          args: Prisma.EntityCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EntityCountAggregateOutputType> | number
-        }
-      }
-    }
-    EntityState: {
-      payload: Prisma.$EntityStatePayload<ExtArgs>
-      fields: Prisma.EntityStateFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.EntityStateFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.EntityStateFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>
-        }
-        findFirst: {
-          args: Prisma.EntityStateFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.EntityStateFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>
-        }
-        findMany: {
-          args: Prisma.EntityStateFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>[]
-        }
-        create: {
-          args: Prisma.EntityStateCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>
-        }
-        createMany: {
-          args: Prisma.EntityStateCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.EntityStateCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>[]
-        }
-        delete: {
-          args: Prisma.EntityStateDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>
-        }
-        update: {
-          args: Prisma.EntityStateUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>
-        }
-        deleteMany: {
-          args: Prisma.EntityStateDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.EntityStateUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.EntityStateUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>[]
-        }
-        upsert: {
-          args: Prisma.EntityStateUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityStatePayload>
-        }
-        aggregate: {
-          args: Prisma.EntityStateAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateEntityState>
-        }
-        groupBy: {
-          args: Prisma.EntityStateGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EntityStateGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.EntityStateCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EntityStateCountAggregateOutputType> | number
+          args: Prisma.UserStateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserStateCountAggregateOutputType> | number
         }
       }
     }
@@ -902,25 +827,18 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const EntityScalarFieldEnum = {
+export const UserStateScalarFieldEnum = {
   id: 'id',
-  userId: 'userId'
-} as const
-
-export type EntityScalarFieldEnum = (typeof EntityScalarFieldEnum)[keyof typeof EntityScalarFieldEnum]
-
-
-export const EntityStateScalarFieldEnum = {
-  id: 'id',
-  entityId: 'entityId',
+  userId: 'userId',
   level: 'level',
   energy: 'energy',
   loyalty: 'loyalty',
   fatigue: 'fatigue',
-  streak: 'streak'
+  streak: 'streak',
+  updatedAt: 'updatedAt'
 } as const
 
-export type EntityStateScalarFieldEnum = (typeof EntityStateScalarFieldEnum)[keyof typeof EntityStateScalarFieldEnum]
+export type UserStateScalarFieldEnum = (typeof UserStateScalarFieldEnum)[keyof typeof UserStateScalarFieldEnum]
 
 
 export const DailyCheckInScalarFieldEnum = {
@@ -1167,8 +1085,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
-  entity?: Prisma.EntityOmit
-  entityState?: Prisma.EntityStateOmit
+  userState?: Prisma.UserStateOmit
   dailyCheckIn?: Prisma.DailyCheckInOmit
   reward?: Prisma.RewardOmit
   userRewards?: Prisma.UserRewardsOmit
