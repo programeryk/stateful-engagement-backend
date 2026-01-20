@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -21,32 +21,25 @@ model User {
   email String? @unique
   name  String?
 
-  entity   Entity?
+  state    UserState?
   checkIns DailyCheckIn[]
+
   rewards UserRewards[]
 }
 
-model Entity {
+model UserState {
   id String @id @default(uuid())
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  state EntityState?
-}
-
-model EntityState {
-  id String @id @default(uuid())
-
-  entityId String @unique
-  entity   Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
-
   level   Int @default(1)
   energy  Int @default(50)
   loyalty Int @default(0)
   fatigue Int @default(0)
+  streak  Int @default(0)
 
-  streak Int @default(0)
+  updatedAt DateTime @updatedAt
 }
 
 model DailyCheckIn {
@@ -64,10 +57,10 @@ model DailyCheckIn {
 model Reward {
   id String @id @default(uuid())
 
-  title String
+  title       String
   description String?
 
-  type String // "streak" | "level"
+  type      String // "streak" | "level"
   threshold Int
 
   effects Json?
@@ -78,12 +71,12 @@ model Reward {
 model UserRewards {
   id String @id @default(uuid())
 
-  userId String
+  userId   String
   rewardId String
 
   claimedAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   reward Reward @relation(fields: [rewardId], references: [id], onDelete: Cascade)
 
   @@unique([userId, rewardId])
