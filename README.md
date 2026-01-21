@@ -54,14 +54,14 @@ The system enforces the following rules:
 * All check-ins and state updates happen inside a **single transaction**.
 * State values are clamped to valid ranges:
 
-  * `energy ≥ 0`
-  * `fatigue ≥ 0`
-  * `streak ≥ 0`
+  * `0 <= energy <= 100`
+  * `0 <= fatigue <= 100`
+  * `streak`
 * Inventory size is capped (e.g. max 5 tools).
 * Tool usage is atomic:
 
   * state update + inventory update succeed or fail together.
-* Rewards can only be claimed once.
+* Rewards are automatically applied when conditions are met and can only be applied once per user.
 
 These invariants are enforced using:
 
@@ -80,7 +80,7 @@ These invariants are enforced using:
 * **Idempotent user bootstrapping**
 * Protection against duplicate actions using **unique constraints**
 * Atomic state updates using **database transactions**
-* Reward unlock + claim tracking
+* Reward unlock + once-ever application tracking
 * Designed to reflect **real production backend patterns**
 
 ---
@@ -166,6 +166,7 @@ Each user has a single persistent `UserState`:
 * `loyalty`
 
 State is updated only through controlled service logic.
+User state is bootstrapped lazily and idempotently: if a user has no UserState, it is created inside the same transaction that performs the first state-changing action.
 
 ---
 
@@ -174,12 +175,12 @@ State is updated only through controlled service logic.
 * Rewards are defined globally.
 * Each reward has an unlock condition (e.g. streak ≥ 7).
 * Unlocking is automatic and deterministic.
-* Rewards can be claimed once.
-* Claims are tracked in a join table.
+* Rewards are automatically applied when eligible
+* Applications are tracked in AppliedReward (join table) to ensure once-ever.
 
 ---
 
-5. **Tools & Inventory** *(Safe Version)*
+5. **Tools & Inventory**
 
 * Tools are defined in a DB catalog (`ToolDefinition`).
 * Users can buy tools using loyalty.
@@ -202,6 +203,18 @@ All tool usage is transactional.
 * Business rules are enforced as close to the data layer as possible.
 * Transactions prevent partial state updates.
 * Reward ownership is tracked via a join table.
+
+---
+
+## Non-goals
+
+This project intentionally does not include:
+- frontend UI
+- real-time updates
+- randomness or probabilistic mechanics
+- background schedulers (cron jobs)
+
+The focus is correctness, determinism, and transactional safety.
 
 ---
 
@@ -268,6 +281,21 @@ API available at:
 
 ```
 http://localhost:3000
+```
+
+---
+
+### Curl example
+
+Right now auth is mocked via a header:
+
+```bash
+X-User-Id: 11111111-1111-1111-1111-111111111111
+```
+
+Get current user + state
+```bash
+curl http://localhost:3000/me -H "X-User-Id: 11111111-1111-1111-1111-111111111111"
 ```
 
 ---
