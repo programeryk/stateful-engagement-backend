@@ -14,7 +14,7 @@ export class CheckinsService {
       loyalty?: number;
       energy?: number;
       fatigue?: number;
-    }
+    };
     const now = new Date();
     const today = new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
@@ -90,13 +90,22 @@ export class CheckinsService {
           newlyApplied.push({ rewardId: reward.id, title: reward.title });
         }
 
+        const newEnergy = Math.min(
+          100,
+          Math.max(0, userState.energy + energyDelta),
+        );
+        const newFatigue = Math.min(
+          100,
+          Math.max(0, userState.fatigue + fatigueDelta),
+        );
+
         const finalState = await tx.userState.update({
           where: { userId },
           data: {
             streak: newStreak,
-            loyalty: { increment: loyaltyDelta },
-            energy: { increment: energyDelta },
-            fatigue: { increment: fatigueDelta },
+            loyalty: userState.loyalty + loyaltyDelta, // no cap
+            energy: newEnergy,
+            fatigue: newFatigue,
           },
         });
 
