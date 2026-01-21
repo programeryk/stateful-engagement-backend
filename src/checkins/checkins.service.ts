@@ -11,43 +11,39 @@ export class CheckinsService {
 
   async postCheckIns(userId: string) {
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const today = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
     const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setUTCDate(yesterday.getUTCDate() - 1);
 
     try {
       //using transaction so that either both state and streak update or fail.
       const result = await this.prisma.$transaction(async (tx) => {
+        //find at most one row from the userState table by using a field that is unique or primary key - user id
         const userState = await tx.userState.findUnique({
           where: { userId },
         });
-        if (!userState) throw new NotFoundException('call /me first');
+        if (!userState) throw new NotFoundException('call /me first'); //if doesnt exist then throw NFE
 
-        //set the ongoing streak
+        //1. set the ongoing streak
+        //find at most one row using the fields that are unique - userId and date that matches yesterday
         const existsYesterday = await tx.dailyCheckIn.findUnique({
           where: { userId_date: { userId, date: yesterday } },
         });
+        //insert a new row into the dailyCheckIn table with column values of usrId and date: today
+        //Prisma generates SQL INSERT, sends to postgres and returns the created row into checkIn
         const checkIn = await tx.dailyCheckIn.create({
           data: { userId, date: today },
         });
         const newStreak = existsYesterday ? userState.streak + 1 : 1;
 
-        //update base meters for check in
+        //2. update base meters for check in
         const baseEnergyGain = 20;
         const baseFatigueGain = 10;
         const baseLoyaltyGain = 1;
-
-        const updatedState = await tx.userState.update({
-          where: { userId },
-          data: {
-            streak: newStreak,
-            energy: { increment: baseEnergyGain },
-            fatigue: { increment: baseFatigueGain },
-            loyalty: { increment: baseLoyaltyGain },
-          },
-        });
-
         //reward auto apply
+        //find all rows that will be eligble rewards. Of type streak and where the threshold is less than/equal to the user's streak
         const eligibleRewards = await tx.reward.findMany({
           where: {
             type: 'streak',
@@ -59,38 +55,41 @@ export class CheckinsService {
           where: { userId },
           select: { rewardId: true },
         });
-        const appliedIds = new Set(alreadyApplied.map((r) => r.rewardId));
-
+        //take alreadyApplied array, for each item r extract r.rewardId into a Set. Using Set for O(1) lookup (only uniques in a Set)
+        const appliedIds = new Set(alreadyApplied.map((r) => r.rewardId)); 
         const newlyApplied: Array<{ rewardId: string; title: string }> = [];
+
+        let loyaltyDelta = baseLoyaltyGain;
+        let energyDelta = baseEnergyGain;
+        let fatigueDelta = baseFatigueGain;
 
         for (const reward of eligibleRewards) {
           if (appliedIds.has(reward.id)) continue;
 
-          // effects is Json? like { loyalty: 50, energy: 10 }
+          //if reward.effects is nullish make sure its at least an object
           const effects = (reward.effects ?? {}) as any;
 
-          await tx.userState.update({
-            where: { userId },
-            data: {
-              loyalty: effects.loyalty
-                ? { increment: effects.loyalty }
-                : undefined,
-              energy: effects.energy
-                ? { increment: effects.energy }
-                : undefined,
-              fatigue: effects.fatigue
-                ? { increment: effects.fatigue }
-                : undefined,
-            },
-          });
+          if (typeof effects.loyalty === 'number')
+            loyaltyDelta += effects.loyalty;
+          if (typeof effects.energy === 'number') energyDelta += effects.energy;
+          if (typeof effects.fatigue === 'number')
+            fatigueDelta += effects.fatigue;
 
           await tx.appliedReward.create({
             data: { userId, rewardId: reward.id },
           });
-
           newlyApplied.push({ rewardId: reward.id, title: reward.title });
         }
-        const finalState = await tx.userState.findUnique({ where: { userId } });
+
+        const finalState = await tx.userState.update({
+          where: { userId },
+          data: {
+            streak: newStreak,
+            loyalty: { increment: loyaltyDelta },
+            energy: { increment: energyDelta },
+            fatigue: { increment: fatigueDelta },
+          },
+        });
 
         return {
           ok: true,
