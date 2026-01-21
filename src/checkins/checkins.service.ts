@@ -31,12 +31,12 @@ export class CheckinsService {
         const existsYesterday = await tx.dailyCheckIn.findUnique({
           where: { userId_date: { userId, date: yesterday } },
         });
+        const newStreak = existsYesterday ? userState.streak + 1 : 1;
         //insert a new row into the dailyCheckIn table with column values of usrId and date: today
         //Prisma generates SQL INSERT, sends to postgres and returns the created row into checkIn
         const checkIn = await tx.dailyCheckIn.create({
           data: { userId, date: today },
         });
-        const newStreak = existsYesterday ? userState.streak + 1 : 1;
 
         //2. update base meters for check in
         const baseEnergyGain = 20;
@@ -56,7 +56,7 @@ export class CheckinsService {
           select: { rewardId: true },
         });
         //take alreadyApplied array, for each item r extract r.rewardId into a Set. Using Set for O(1) lookup (only uniques in a Set)
-        const appliedIds = new Set(alreadyApplied.map((r) => r.rewardId)); 
+        const appliedIds = new Set(alreadyApplied.map((r) => r.rewardId));
         const newlyApplied: Array<{ rewardId: string; title: string }> = [];
 
         let loyaltyDelta = baseLoyaltyGain;
@@ -64,9 +64,20 @@ export class CheckinsService {
         let fatigueDelta = baseFatigueGain;
 
         for (const reward of eligibleRewards) {
-          if (appliedIds.has(reward.id)) continue;
+          try {
+            // try to mark reward as applied (db enforces once ever)
+            await tx.appliedReward.create({
+              data: { userId, rewardId: reward.id },
+            });
+          } catch (err: any) {
+            if (err?.code === 'P2002') {
+              // already applied (maybe by another concurrent request) -> skip effects
+              continue;
+            }
+            throw err;
+          }
 
-          //if reward.effects is nullish make sure its at least an object
+          // only if we successfully created AppliedReward do we add effects
           const effects = (reward.effects ?? {}) as any;
 
           if (typeof effects.loyalty === 'number')
@@ -75,9 +86,6 @@ export class CheckinsService {
           if (typeof effects.fatigue === 'number')
             fatigueDelta += effects.fatigue;
 
-          await tx.appliedReward.create({
-            data: { userId, rewardId: reward.id },
-          });
           newlyApplied.push({ rewardId: reward.id, title: reward.title });
         }
 
