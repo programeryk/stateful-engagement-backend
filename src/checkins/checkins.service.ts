@@ -10,6 +10,11 @@ export class CheckinsService {
   constructor(private prisma: PrismaService) {}
 
   async postCheckIns(userId: string) {
+    type RewardEffects = {
+      loyalty?: number;
+      energy?: number;
+      fatigue?: number;
+    }
     const now = new Date();
     const today = new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
@@ -32,6 +37,15 @@ export class CheckinsService {
           where: { userId_date: { userId, date: yesterday } },
         });
         const newStreak = existsYesterday ? userState.streak + 1 : 1;
+
+        //find all rows that will be eligble rewards. Of type streak and where the threshold is less than/equal to the user's streak
+        const eligibleRewards = await tx.reward.findMany({
+          where: {
+            type: 'streak',
+            threshold: { lte: newStreak },
+          },
+        });
+
         //insert a new row into the dailyCheckIn table with column values of usrId and date: today
         //Prisma generates SQL INSERT, sends to postgres and returns the created row into checkIn
         const checkIn = await tx.dailyCheckIn.create({
@@ -43,20 +57,7 @@ export class CheckinsService {
         const baseFatigueGain = 10;
         const baseLoyaltyGain = 1;
         //reward auto apply
-        //find all rows that will be eligble rewards. Of type streak and where the threshold is less than/equal to the user's streak
-        const eligibleRewards = await tx.reward.findMany({
-          where: {
-            type: 'streak',
-            threshold: { lte: newStreak },
-          },
-        });
-
-        const alreadyApplied = await tx.appliedReward.findMany({
-          where: { userId },
-          select: { rewardId: true },
-        });
         //take alreadyApplied array, for each item r extract r.rewardId into a Set. Using Set for O(1) lookup (only uniques in a Set)
-        const appliedIds = new Set(alreadyApplied.map((r) => r.rewardId));
         const newlyApplied: Array<{ rewardId: string; title: string }> = [];
 
         let loyaltyDelta = baseLoyaltyGain;
@@ -78,7 +79,7 @@ export class CheckinsService {
           }
 
           // only if we successfully created AppliedReward do we add effects
-          const effects = (reward.effects ?? {}) as any;
+          const effects = (reward.effects ?? {}) as RewardEffects;
 
           if (typeof effects.loyalty === 'number')
             loyaltyDelta += effects.loyalty;
