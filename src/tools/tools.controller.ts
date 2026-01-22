@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { UserId } from 'src/common/user-id.decorator';
 
@@ -12,5 +12,9 @@ export class ToolsController {
   @Get('inventory')
   getInventory(@UserId() userId: string) {
     return this.toolsService.getInventory(userId);
+  }
+  @Post('inventory/buy/:toolId')
+  buyTool(@UserId() userId: string, @Param() toolId: string) {
+    return;
   }
 }
