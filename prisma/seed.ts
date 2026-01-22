@@ -8,6 +8,7 @@ if (!url) throw new Error('DATABASE_URL is missing');
 const adapter = new PrismaPg({ connectionString: url! });
 const prisma = new PrismaClient({ adapter });
 async function main() {
+  const demoUserId = '11111111-1111-1111-1111-111111111111';
   const rewards = [
     {
       id: 'streak_3',
@@ -26,29 +27,28 @@ async function main() {
   ];
 
   const tools = [
-  {
-    id: 'coffee',
-    name: 'Coffee',
-    description: 'Boosts energy a bit',
-    price: 10,
-    effects: { energy: 15, fatigue: 2 },
-  },
-  {
-    id: 'rest',
-    name: 'Rest Kit',
-    description: 'Reduces fatigue',
-    price: 16,
-    effects: { fatigue: -15 },
-  },
-  {
-    id: 'focus',
-    name: 'Focus Chip',
-    description: 'Small loyalty bonus',
-    price: 20,
-    effects: { loyalty: 5, energy: 5 },
-  },
-];
-
+    {
+      id: 'coffee',
+      name: 'Coffee',
+      description: 'Boosts energy a bit',
+      price: 10,
+      effects: { energy: 15, fatigue: 2 },
+    },
+    {
+      id: 'rest',
+      name: 'Rest Kit',
+      description: 'Reduces fatigue',
+      price: 16,
+      effects: { fatigue: -15 },
+    },
+    {
+      id: 'focus',
+      name: 'Focus Chip',
+      description: 'Small loyalty bonus',
+      price: 20,
+      effects: { loyalty: 5, energy: 5 },
+    },
+  ];
 
   for (const reward of rewards) {
     await prisma.reward.upsert({
@@ -58,15 +58,21 @@ async function main() {
     });
   }
 
-    for (const tool of tools) {
+  for (const tool of tools) {
     await prisma.toolDefinition.upsert({
       where: { id: tool.id },
-      update: {...tool},
-      create: {...tool},
+      update: { ...tool },
+      create: { ...tool },
     });
   }
 
-  console.log(`reward and tools seeded!`);
+  await prisma.userTool.upsert({
+    where: { userId_toolId: { userId: demoUserId, toolId: 'coffee' } },
+    update: { quantity: { increment: 2 } },
+    create: { userId: demoUserId, toolId: 'coffee', quantity: 2 },
+  });
+
+  console.log(`seeded all the tables!`);
 }
 
 main()
