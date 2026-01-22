@@ -261,7 +261,7 @@ export type ToolDefinitionScalarWhereWithAggregatesInput = {
 }
 
 export type ToolDefinitionCreateInput = {
-  id?: string
+  id: string
   name: string
   description?: string | null
   price?: number
@@ -270,7 +270,7 @@ export type ToolDefinitionCreateInput = {
 }
 
 export type ToolDefinitionUncheckedCreateInput = {
-  id?: string
+  id: string
   name: string
   description?: string | null
   price?: number
@@ -297,7 +297,7 @@ export type ToolDefinitionUncheckedUpdateInput = {
 }
 
 export type ToolDefinitionCreateManyInput = {
-  id?: string
+  id: string
   name: string
   description?: string | null
   price?: number
@@ -370,7 +370,7 @@ export type ToolDefinitionUpdateOneRequiredWithoutUserToolsNestedInput = {
 }
 
 export type ToolDefinitionCreateWithoutUserToolsInput = {
-  id?: string
+  id: string
   name: string
   description?: string | null
   price?: number
@@ -378,7 +378,7 @@ export type ToolDefinitionCreateWithoutUserToolsInput = {
 }
 
 export type ToolDefinitionUncheckedCreateWithoutUserToolsInput = {
-  id?: string
+  id: string
   name: string
   description?: string | null
   price?: number

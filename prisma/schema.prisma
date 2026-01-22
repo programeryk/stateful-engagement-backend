@@ -81,7 +81,7 @@ model AppliedReward {
 }
 
 model ToolDefinition {
-  id String @id @default(uuid())
+  id String @id
   name String
   description String?
   price Int @default(1000)
@@ -91,10 +91,10 @@ model ToolDefinition {
 }
 
 model UserTool {
-  id String @id @default(uuid())
+  id String @id
   userId String
   toolId String
-  quantity Int @default(0)
+  quantity Int @default(1)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   tool ToolDefinition @relation(fields: [toolId], references: [id], onDelete: Cascade)

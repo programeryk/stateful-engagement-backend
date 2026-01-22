@@ -257,14 +257,14 @@ export type UserToolScalarWhereWithAggregatesInput = {
 }
 
 export type UserToolCreateInput = {
-  id?: string
+  id: string
   quantity?: number
   user: Prisma.UserCreateNestedOneWithoutToolsInput
   tool: Prisma.ToolDefinitionCreateNestedOneWithoutUserToolsInput
 }
 
 export type UserToolUncheckedCreateInput = {
-  id?: string
+  id: string
   userId: string
   toolId: string
   quantity?: number
@@ -285,7 +285,7 @@ export type UserToolUncheckedUpdateInput = {
 }
 
 export type UserToolCreateManyInput = {
-  id?: string
+  id: string
   userId: string
   toolId: string
   quantity?: number
@@ -432,13 +432,13 @@ export type UserToolUncheckedUpdateManyWithoutToolNestedInput = {
 }
 
 export type UserToolCreateWithoutUserInput = {
-  id?: string
+  id: string
   quantity?: number
   tool: Prisma.ToolDefinitionCreateNestedOneWithoutUserToolsInput
 }
 
 export type UserToolUncheckedCreateWithoutUserInput = {
-  id?: string
+  id: string
   toolId: string
   quantity?: number
 }
@@ -480,13 +480,13 @@ export type UserToolScalarWhereInput = {
 }
 
 export type UserToolCreateWithoutToolInput = {
-  id?: string
+  id: string
   quantity?: number
   user: Prisma.UserCreateNestedOneWithoutToolsInput
 }
 
 export type UserToolUncheckedCreateWithoutToolInput = {
-  id?: string
+  id: string
   userId: string
   quantity?: number
 }
@@ -518,7 +518,7 @@ export type UserToolUpdateManyWithWhereWithoutToolInput = {
 }
 
 export type UserToolCreateManyUserInput = {
-  id?: string
+  id: string
   toolId: string
   quantity?: number
 }
@@ -542,7 +542,7 @@ export type UserToolUncheckedUpdateManyWithoutUserInput = {
 }
 
 export type UserToolCreateManyToolInput = {
-  id?: string
+  id: string
   userId: string
   quantity?: number
 }
