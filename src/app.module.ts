@@ -5,7 +5,6 @@ import { UsersModule } from './users/users.module';
 import { StateModule } from './state/state.module';
 import { CheckinsModule } from './checkins/checkins.module';
 import { ToolsModule } from './tools/tools.module';
-import { InventoryModule } from './inventory/inventory.module';
 import { RewardsModule } from './rewards/rewards.module';
 import { MeController } from './me/me.controller';
 import { MeService } from './me/me.service';
@@ -19,7 +18,6 @@ import { PrismaModule } from './prisma/prisma.module';
     StateModule,
     CheckinsModule,
     ToolsModule,
-    InventoryModule,
     RewardsModule,
     MeModule,
   ],
