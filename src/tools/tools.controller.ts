@@ -15,6 +15,6 @@ export class ToolsController {
   }
   @Post('inventory/buy/:toolId')
   buyTool(@UserId() userId: string, @Param() toolId: string) {
-    return;
+    return this.toolsService.buyTool(userId, toolId);
   }
 }
