@@ -91,7 +91,7 @@ model ToolDefinition {
 }
 
 model UserTool {
-  id String @id
+  id String @id @default(uuid())
   userId String
   toolId String
   quantity Int @default(1)

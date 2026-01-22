@@ -66,11 +66,11 @@ async function main() {
     });
   }
   //seeding this only before /buy is implemented
-  await prisma.userTool.upsert({
-    where: { userId_toolId: { userId: demoUserId, toolId: 'coffee' } },
-    update: { quantity: { increment: 2 } },
-    create: { userId: demoUserId, toolId: 'coffee', quantity: 2 },
-  });
+  // await prisma.userTool.upsert({
+  //   where: { userId_toolId: { userId: demoUserId, toolId: 'coffee' } },
+  //   update: { quantity: { increment: 2 } },
+  //   create: { userId: demoUserId, toolId: 'coffee', quantity: 2 },
+  // });
 
   console.log(`seeded all the tables!`);
 }
