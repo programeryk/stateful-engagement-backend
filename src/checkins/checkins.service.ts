@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Clamp } from 'src/common/clamp';
 
 @Injectable()
 export class CheckinsService {
@@ -90,20 +91,14 @@ export class CheckinsService {
           newlyApplied.push({ rewardId: reward.id, title: reward.title });
         }
 
-        const newEnergy = Math.min(
-          100,
-          Math.max(0, userState.energy + energyDelta),
-        );
-        const newFatigue = Math.min(
-          100,
-          Math.max(0, userState.fatigue + fatigueDelta),
-        );
+        const newEnergy = Clamp(userState.energy + energyDelta);
+        const newFatigue = Clamp(userState.fatigue + fatigueDelta);
 
         const finalState = await tx.userState.update({
           where: { userId },
           data: {
             streak: newStreak,
-            loyalty: userState.loyalty + loyaltyDelta, // no cap
+            loyalty: { increment: loyaltyDelta }, // no cap
             energy: newEnergy,
             fatigue: newFatigue,
           },
