@@ -56,7 +56,7 @@ export class CheckinsService {
         //2. update base meters for check in
         const baseEnergyGain = 20;
         const baseFatigueGain = 10;
-        const baseLoyaltyGain = 1;
+        const baseLoyaltyGain = 5;
         //reward auto apply
         //take alreadyApplied array, for each item r extract r.rewardId into a Set. Using Set for O(1) lookup (only uniques in a Set)
         const newlyApplied: Array<{ rewardId: string; title: string }> = [];
