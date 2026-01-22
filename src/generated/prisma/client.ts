@@ -62,3 +62,13 @@ export type Reward = Prisma.RewardModel
  * 
  */
 export type AppliedReward = Prisma.AppliedRewardModel
+/**
+ * Model ToolDefinition
+ * 
+ */
+export type ToolDefinition = Prisma.ToolDefinitionModel
+/**
+ * Model UserTool
+ * 
+ */
+export type UserTool = Prisma.UserToolModel

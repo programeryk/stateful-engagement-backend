@@ -388,7 +388,9 @@ export const ModelName = {
   UserState: 'UserState',
   DailyCheckIn: 'DailyCheckIn',
   Reward: 'Reward',
-  AppliedReward: 'AppliedReward'
+  AppliedReward: 'AppliedReward',
+  ToolDefinition: 'ToolDefinition',
+  UserTool: 'UserTool'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userState" | "dailyCheckIn" | "reward" | "appliedReward"
+    modelProps: "user" | "userState" | "dailyCheckIn" | "reward" | "appliedReward" | "toolDefinition" | "userTool"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +780,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ToolDefinition: {
+      payload: Prisma.$ToolDefinitionPayload<ExtArgs>
+      fields: Prisma.ToolDefinitionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ToolDefinitionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ToolDefinitionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>
+        }
+        findFirst: {
+          args: Prisma.ToolDefinitionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ToolDefinitionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>
+        }
+        findMany: {
+          args: Prisma.ToolDefinitionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>[]
+        }
+        create: {
+          args: Prisma.ToolDefinitionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>
+        }
+        createMany: {
+          args: Prisma.ToolDefinitionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ToolDefinitionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>[]
+        }
+        delete: {
+          args: Prisma.ToolDefinitionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>
+        }
+        update: {
+          args: Prisma.ToolDefinitionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ToolDefinitionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ToolDefinitionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ToolDefinitionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ToolDefinitionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ToolDefinitionPayload>
+        }
+        aggregate: {
+          args: Prisma.ToolDefinitionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateToolDefinition>
+        }
+        groupBy: {
+          args: Prisma.ToolDefinitionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ToolDefinitionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ToolDefinitionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ToolDefinitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserTool: {
+      payload: Prisma.$UserToolPayload<ExtArgs>
+      fields: Prisma.UserToolFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserToolFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserToolFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>
+        }
+        findFirst: {
+          args: Prisma.UserToolFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserToolFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>
+        }
+        findMany: {
+          args: Prisma.UserToolFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>[]
+        }
+        create: {
+          args: Prisma.UserToolCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>
+        }
+        createMany: {
+          args: Prisma.UserToolCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserToolCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>[]
+        }
+        delete: {
+          args: Prisma.UserToolDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>
+        }
+        update: {
+          args: Prisma.UserToolUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserToolDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserToolUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserToolUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserToolUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserToolPayload>
+        }
+        aggregate: {
+          args: Prisma.UserToolAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserTool>
+        }
+        groupBy: {
+          args: Prisma.UserToolGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserToolGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserToolCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserToolCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -835,7 +985,6 @@ export const UserStateScalarFieldEnum = {
   loyalty: 'loyalty',
   fatigue: 'fatigue',
   streak: 'streak',
-  streakRun: 'streakRun',
   updatedAt: 'updatedAt'
 } as const
 
@@ -874,6 +1023,27 @@ export const AppliedRewardScalarFieldEnum = {
 export type AppliedRewardScalarFieldEnum = (typeof AppliedRewardScalarFieldEnum)[keyof typeof AppliedRewardScalarFieldEnum]
 
 
+export const ToolDefinitionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  effects: 'effects'
+} as const
+
+export type ToolDefinitionScalarFieldEnum = (typeof ToolDefinitionScalarFieldEnum)[keyof typeof ToolDefinitionScalarFieldEnum]
+
+
+export const UserToolScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  toolId: 'toolId',
+  quantity: 'quantity'
+} as const
+
+export type UserToolScalarFieldEnum = (typeof UserToolScalarFieldEnum)[keyof typeof UserToolScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -888,6 +1058,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1090,6 +1267,8 @@ export type GlobalOmitConfig = {
   dailyCheckIn?: Prisma.DailyCheckInOmit
   reward?: Prisma.RewardOmit
   appliedReward?: Prisma.AppliedRewardOmit
+  toolDefinition?: Prisma.ToolDefinitionOmit
+  userTool?: Prisma.UserToolOmit
 }
 
 /* Types for Logging */

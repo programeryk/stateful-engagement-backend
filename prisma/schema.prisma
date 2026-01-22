@@ -24,6 +24,7 @@ model User {
   state          UserState?
   checkIns       DailyCheckIn[]
   appliedRewards AppliedReward[]
+  tools UserTool[]
 }
 
 model UserState {
@@ -37,7 +38,6 @@ model UserState {
   fatigue Int @default(0)
 
   streak    Int @default(0)
-  streakRun Int @default(0)
 
   updatedAt DateTime @updatedAt
 }
@@ -78,4 +78,28 @@ model AppliedReward {
   @@unique([userId, rewardId])
   @@index([userId])
   @@index([rewardId])
+}
+
+model ToolDefinition {
+  id String @id @default(uuid())
+  name String
+  description String?
+  price Int @default(1000)
+  effects Json
+
+  userTools UserTool[]
+}
+
+model UserTool {
+  id String @id @default(uuid())
+  userId String
+  toolId String
+  quantity Int @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool ToolDefinition @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+  @@index([userId])
+  @@index([toolId])
 }

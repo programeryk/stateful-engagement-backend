@@ -55,7 +55,9 @@ export const ModelName = {
   UserState: 'UserState',
   DailyCheckIn: 'DailyCheckIn',
   Reward: 'Reward',
-  AppliedReward: 'AppliedReward'
+  AppliedReward: 'AppliedReward',
+  ToolDefinition: 'ToolDefinition',
+  UserTool: 'UserTool'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -92,7 +94,6 @@ export const UserStateScalarFieldEnum = {
   loyalty: 'loyalty',
   fatigue: 'fatigue',
   streak: 'streak',
-  streakRun: 'streakRun',
   updatedAt: 'updatedAt'
 } as const
 
@@ -131,6 +132,27 @@ export const AppliedRewardScalarFieldEnum = {
 export type AppliedRewardScalarFieldEnum = (typeof AppliedRewardScalarFieldEnum)[keyof typeof AppliedRewardScalarFieldEnum]
 
 
+export const ToolDefinitionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  effects: 'effects'
+} as const
+
+export type ToolDefinitionScalarFieldEnum = (typeof ToolDefinitionScalarFieldEnum)[keyof typeof ToolDefinitionScalarFieldEnum]
+
+
+export const UserToolScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  toolId: 'toolId',
+  quantity: 'quantity'
+} as const
+
+export type UserToolScalarFieldEnum = (typeof UserToolScalarFieldEnum)[keyof typeof UserToolScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -145,6 +167,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

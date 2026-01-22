@@ -177,6 +177,7 @@ export type UserWhereInput = {
   state?: Prisma.XOR<Prisma.UserStateNullableScalarRelationFilter, Prisma.UserStateWhereInput> | null
   checkIns?: Prisma.DailyCheckInListRelationFilter
   appliedRewards?: Prisma.AppliedRewardListRelationFilter
+  tools?: Prisma.UserToolListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -187,6 +188,7 @@ export type UserOrderByWithRelationInput = {
   state?: Prisma.UserStateOrderByWithRelationInput
   checkIns?: Prisma.DailyCheckInOrderByRelationAggregateInput
   appliedRewards?: Prisma.AppliedRewardOrderByRelationAggregateInput
+  tools?: Prisma.UserToolOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -200,6 +202,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   state?: Prisma.XOR<Prisma.UserStateNullableScalarRelationFilter, Prisma.UserStateWhereInput> | null
   checkIns?: Prisma.DailyCheckInListRelationFilter
   appliedRewards?: Prisma.AppliedRewardListRelationFilter
+  tools?: Prisma.UserToolListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -230,6 +233,7 @@ export type UserCreateInput = {
   state?: Prisma.UserStateCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInCreateNestedManyWithoutUserInput
   appliedRewards?: Prisma.AppliedRewardCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -240,6 +244,7 @@ export type UserUncheckedCreateInput = {
   state?: Prisma.UserStateUncheckedCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInUncheckedCreateNestedManyWithoutUserInput
   appliedRewards?: Prisma.AppliedRewardUncheckedCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -250,6 +255,7 @@ export type UserUpdateInput = {
   state?: Prisma.UserStateUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUpdateManyWithoutUserNestedInput
   appliedRewards?: Prisma.AppliedRewardUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -260,6 +266,7 @@ export type UserUncheckedUpdateInput = {
   state?: Prisma.UserStateUncheckedUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUncheckedUpdateManyWithoutUserNestedInput
   appliedRewards?: Prisma.AppliedRewardUncheckedUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -363,6 +370,20 @@ export type UserUpdateOneRequiredWithoutAppliedRewardsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAppliedRewardsInput, Prisma.UserUpdateWithoutAppliedRewardsInput>, Prisma.UserUncheckedUpdateWithoutAppliedRewardsInput>
 }
 
+export type UserCreateNestedOneWithoutToolsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutToolsInput, Prisma.UserUncheckedCreateWithoutToolsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutToolsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutToolsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutToolsInput, Prisma.UserUncheckedCreateWithoutToolsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutToolsInput
+  upsert?: Prisma.UserUpsertWithoutToolsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutToolsInput, Prisma.UserUpdateWithoutToolsInput>, Prisma.UserUncheckedUpdateWithoutToolsInput>
+}
+
 export type UserCreateWithoutStateInput = {
   id?: string
   createdAt?: Date | string
@@ -370,6 +391,7 @@ export type UserCreateWithoutStateInput = {
   name?: string | null
   checkIns?: Prisma.DailyCheckInCreateNestedManyWithoutUserInput
   appliedRewards?: Prisma.AppliedRewardCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStateInput = {
@@ -379,6 +401,7 @@ export type UserUncheckedCreateWithoutStateInput = {
   name?: string | null
   checkIns?: Prisma.DailyCheckInUncheckedCreateNestedManyWithoutUserInput
   appliedRewards?: Prisma.AppliedRewardUncheckedCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStateInput = {
@@ -404,6 +427,7 @@ export type UserUpdateWithoutStateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkIns?: Prisma.DailyCheckInUpdateManyWithoutUserNestedInput
   appliedRewards?: Prisma.AppliedRewardUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStateInput = {
@@ -413,6 +437,7 @@ export type UserUncheckedUpdateWithoutStateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkIns?: Prisma.DailyCheckInUncheckedUpdateManyWithoutUserNestedInput
   appliedRewards?: Prisma.AppliedRewardUncheckedUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCheckInsInput = {
@@ -422,6 +447,7 @@ export type UserCreateWithoutCheckInsInput = {
   name?: string | null
   state?: Prisma.UserStateCreateNestedOneWithoutUserInput
   appliedRewards?: Prisma.AppliedRewardCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCheckInsInput = {
@@ -431,6 +457,7 @@ export type UserUncheckedCreateWithoutCheckInsInput = {
   name?: string | null
   state?: Prisma.UserStateUncheckedCreateNestedOneWithoutUserInput
   appliedRewards?: Prisma.AppliedRewardUncheckedCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCheckInsInput = {
@@ -456,6 +483,7 @@ export type UserUpdateWithoutCheckInsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.UserStateUpdateOneWithoutUserNestedInput
   appliedRewards?: Prisma.AppliedRewardUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCheckInsInput = {
@@ -465,6 +493,7 @@ export type UserUncheckedUpdateWithoutCheckInsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.UserStateUncheckedUpdateOneWithoutUserNestedInput
   appliedRewards?: Prisma.AppliedRewardUncheckedUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAppliedRewardsInput = {
@@ -474,6 +503,7 @@ export type UserCreateWithoutAppliedRewardsInput = {
   name?: string | null
   state?: Prisma.UserStateCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAppliedRewardsInput = {
@@ -483,6 +513,7 @@ export type UserUncheckedCreateWithoutAppliedRewardsInput = {
   name?: string | null
   state?: Prisma.UserStateUncheckedCreateNestedOneWithoutUserInput
   checkIns?: Prisma.DailyCheckInUncheckedCreateNestedManyWithoutUserInput
+  tools?: Prisma.UserToolUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAppliedRewardsInput = {
@@ -508,6 +539,7 @@ export type UserUpdateWithoutAppliedRewardsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.UserStateUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAppliedRewardsInput = {
@@ -517,6 +549,63 @@ export type UserUncheckedUpdateWithoutAppliedRewardsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.UserStateUncheckedUpdateOneWithoutUserNestedInput
   checkIns?: Prisma.DailyCheckInUncheckedUpdateManyWithoutUserNestedInput
+  tools?: Prisma.UserToolUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutToolsInput = {
+  id?: string
+  createdAt?: Date | string
+  email?: string | null
+  name?: string | null
+  state?: Prisma.UserStateCreateNestedOneWithoutUserInput
+  checkIns?: Prisma.DailyCheckInCreateNestedManyWithoutUserInput
+  appliedRewards?: Prisma.AppliedRewardCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutToolsInput = {
+  id?: string
+  createdAt?: Date | string
+  email?: string | null
+  name?: string | null
+  state?: Prisma.UserStateUncheckedCreateNestedOneWithoutUserInput
+  checkIns?: Prisma.DailyCheckInUncheckedCreateNestedManyWithoutUserInput
+  appliedRewards?: Prisma.AppliedRewardUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutToolsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutToolsInput, Prisma.UserUncheckedCreateWithoutToolsInput>
+}
+
+export type UserUpsertWithoutToolsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutToolsInput, Prisma.UserUncheckedUpdateWithoutToolsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutToolsInput, Prisma.UserUncheckedCreateWithoutToolsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutToolsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutToolsInput, Prisma.UserUncheckedUpdateWithoutToolsInput>
+}
+
+export type UserUpdateWithoutToolsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.UserStateUpdateOneWithoutUserNestedInput
+  checkIns?: Prisma.DailyCheckInUpdateManyWithoutUserNestedInput
+  appliedRewards?: Prisma.AppliedRewardUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutToolsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.UserStateUncheckedUpdateOneWithoutUserNestedInput
+  checkIns?: Prisma.DailyCheckInUncheckedUpdateManyWithoutUserNestedInput
+  appliedRewards?: Prisma.AppliedRewardUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -527,11 +616,13 @@ export type UserUncheckedUpdateWithoutAppliedRewardsInput = {
 export type UserCountOutputType = {
   checkIns: number
   appliedRewards: number
+  tools: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   checkIns?: boolean | UserCountOutputTypeCountCheckInsArgs
   appliedRewards?: boolean | UserCountOutputTypeCountAppliedRewardsArgs
+  tools?: boolean | UserCountOutputTypeCountToolsArgs
 }
 
 /**
@@ -558,6 +649,13 @@ export type UserCountOutputTypeCountAppliedRewardsArgs<ExtArgs extends runtime.T
   where?: Prisma.AppliedRewardWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountToolsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserToolWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -567,6 +665,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   state?: boolean | Prisma.User$stateArgs<ExtArgs>
   checkIns?: boolean | Prisma.User$checkInsArgs<ExtArgs>
   appliedRewards?: boolean | Prisma.User$appliedRewardsArgs<ExtArgs>
+  tools?: boolean | Prisma.User$toolsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -596,6 +695,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   state?: boolean | Prisma.User$stateArgs<ExtArgs>
   checkIns?: boolean | Prisma.User$checkInsArgs<ExtArgs>
   appliedRewards?: boolean | Prisma.User$appliedRewardsArgs<ExtArgs>
+  tools?: boolean | Prisma.User$toolsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -607,6 +707,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     state: Prisma.$UserStatePayload<ExtArgs> | null
     checkIns: Prisma.$DailyCheckInPayload<ExtArgs>[]
     appliedRewards: Prisma.$AppliedRewardPayload<ExtArgs>[]
+    tools: Prisma.$UserToolPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1010,6 +1111,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   state<T extends Prisma.User$stateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$stateArgs<ExtArgs>>): Prisma.Prisma__UserStateClient<runtime.Types.Result.GetResult<Prisma.$UserStatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   checkIns<T extends Prisma.User$checkInsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$checkInsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyCheckInPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appliedRewards<T extends Prisma.User$appliedRewardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$appliedRewardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppliedRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tools<T extends Prisma.User$toolsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$toolsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserToolPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1495,6 +1597,30 @@ export type User$appliedRewardsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.AppliedRewardScalarFieldEnum | Prisma.AppliedRewardScalarFieldEnum[]
+}
+
+/**
+ * User.tools
+ */
+export type User$toolsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserTool
+   */
+  select?: Prisma.UserToolSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserTool
+   */
+  omit?: Prisma.UserToolOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserToolInclude<ExtArgs> | null
+  where?: Prisma.UserToolWhereInput
+  orderBy?: Prisma.UserToolOrderByWithRelationInput | Prisma.UserToolOrderByWithRelationInput[]
+  cursor?: Prisma.UserToolWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserToolScalarFieldEnum | Prisma.UserToolScalarFieldEnum[]
 }
 
 /**
