@@ -65,7 +65,7 @@ async function main() {
       create: { ...tool },
     });
   }
-
+  //seeding this only before /buy is implemented
   await prisma.userTool.upsert({
     where: { userId_toolId: { userId: demoUserId, toolId: 'coffee' } },
     update: { quantity: { increment: 2 } },
