@@ -99,4 +99,7 @@ export class ToolsService {
       throw err;
     }
   }
+  async useTool(userId, toolId) {
+    return;
+  }
 }
