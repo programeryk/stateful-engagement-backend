@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CheckinsController } from './checkins.controller';
+import { CheckinsService } from './checkins.service';
 
 describe('CheckinsController', () => {
   let controller: CheckinsController;
@@ -7,6 +8,12 @@ describe('CheckinsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CheckinsController],
+      providers: [
+        {
+          provide: CheckinsService,
+          useValue: {}, // minimal for "defined"
+        },
+      ],
     }).compile();
 
     controller = module.get<CheckinsController>(CheckinsController);
