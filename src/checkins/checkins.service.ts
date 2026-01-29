@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {clamp } from 'src/common/clamp';
+import { applyStateChanges } from 'src/common/state-rules';
 
 @Injectable()
 export class CheckinsService {
@@ -91,17 +91,16 @@ export class CheckinsService {
           newlyApplied.push({ rewardId: reward.id, title: reward.title });
         }
 
-        const newEnergy =clamp(userState.energy + energyDelta);
-        const newFatigue =clamp(userState.fatigue + fatigueDelta);
+        const { next, meta } = applyStateChanges(userState, {
+          streak: newStreak,
+          energyDelta,
+          fatigueDelta,
+          loyaltyDelta,
+        });
 
         const finalState = await tx.userState.update({
           where: { userId },
-          data: {
-            streak: newStreak,
-            loyalty: { increment: loyaltyDelta }, // no cap
-            energy: newEnergy,
-            fatigue: newFatigue,
-          },
+          data: next,
         });
 
         return {
@@ -110,6 +109,7 @@ export class CheckinsService {
           streak: newStreak,
           newlyApplied,
           state: finalState,
+          meta,
         };
       });
 
