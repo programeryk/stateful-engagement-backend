@@ -4,16 +4,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-export const UserId = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
+export const UserId = createParamDecorator((data, ctx: ExecutionContext) => {
+  const req = ctx.switchToHttp().getRequest();
 
-    const userId = request.headers['x-user-id'];
+  if (req.user?.userId) return req.user.userId;
 
-    if (!userId) {
-      throw new UnauthorizedException('X-User-Id header missing');
-    }
+  // dev fallback
+  const headerId = req.headers['x-user-id'];
+  if (headerId) return headerId;
 
-    return userId;
-  },
-);
+  throw new UnauthorizedException('Missing auth');
+});

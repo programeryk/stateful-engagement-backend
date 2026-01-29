@@ -11,6 +11,7 @@ import { MeService } from './me/me.service';
 import { MeModule } from './me/me.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     ToolsModule,
     RewardsModule,
     MeModule,
+    AuthModule,
   ],
   controllers: [AppController, MeController],
   providers: [AppService, MeService],
