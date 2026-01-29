@@ -49,6 +49,8 @@ export class ToolsService {
             create: { userId },
           });
 
+          if (!state) throw new NotFoundException('call /me first');
+
           // 3. Load existing inventory row (if any)
           const existing = await tx.userTool.findUnique({
             where: { userId_toolId: { userId, toolId } },
