@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { clamp } from 'src/common/clamp';
+import { applyStateChanges } from 'src/common/state-rules';
 
 @Injectable()
 export class ToolsService {
@@ -100,66 +101,81 @@ export class ToolsService {
       throw err;
     }
   }
-   async useTool(userId: string, toolId: string) {
-    return this.prisma.$transaction(async (tx) => {
-      // 1) tool exists?
-      const tool = await tx.toolDefinition.findUnique({
-        where: { id: toolId },
-      });
-      if (!tool) throw new NotFoundException('tool not found');
+  async useTool(userId: string, toolId: string) {
+    try {
+      return await this.prisma.$transaction(
+        async (tx) => {
+          // 1) tool exists?
+          const tool = await tx.toolDefinition.findUnique({
+            where: { id: toolId },
+          });
+          if (!tool) throw new NotFoundException('tool not found');
 
-      // 2) user state exists?
-      const state = await tx.userState.findUnique({
-        where: { userId },
-      });
-      if (!state) throw new NotFoundException('call /me first');
+          // 2) user state exists?
+          const state = await tx.userState.findUnique({
+            where: { userId },
+          });
+          if (!state) throw new NotFoundException('call /me first');
 
-      // 3) inventory row exists?
-      const inv = await tx.userTool.findUnique({
-        where: { userId_toolId: { userId, toolId } },
-      });
-      if (!inv) throw new ConflictException('tool not in inventory');
-      if (inv.quantity <= 0) throw new ConflictException('tool quantity is 0');
+          // 3) inventory row exists?
+          const inv = await tx.userTool.findUnique({
+            where: { userId_toolId: { userId, toolId } },
+          });
+          if (!inv || inv.quantity <= 0) {
+            throw new ConflictException('tool not in inventory');
+          }
 
-      // 4) decrement qty (or delete if last one)
-      let remainingQty = inv.quantity - 1;
+          // 4) decrement qty (or delete if last one)
+          const remainingQty = inv.quantity - 1;
 
-      if (remainingQty === 0) {
-        await tx.userTool.delete({
-          where: { userId_toolId: { userId, toolId } },
-        });
-      } else {
-        await tx.userTool.update({
-          where: { userId_toolId: { userId, toolId } },
-          data: { quantity: { decrement: 1 } },
-        });
-      }
+          if (remainingQty === 0) {
+            await tx.userTool.delete({
+              where: { userId_toolId: { userId, toolId } },
+            });
+          } else {
+            await tx.userTool.update({
+              where: { userId_toolId: { userId, toolId } },
+              data: { quantity: { decrement: 1 } },
+            });
+          }
 
-      // 5) apply effects to state
-      const effects = (tool.effects ?? {}) as any;
+          // 5) apply effects to state (central rules)
+          const effects = (tool.effects ?? {}) as any;
 
-      const energyDelta = typeof effects.energy === 'number' ? effects.energy : 0;
-      const fatigueDelta = typeof effects.fatigue === 'number' ? effects.fatigue : 0;
-      const loyaltyDelta = typeof effects.loyalty === 'number' ? effects.loyalty : 0;
+          const energyDelta =
+            typeof effects.energy === 'number' ? effects.energy : 0;
+          const fatigueDelta =
+            typeof effects.fatigue === 'number' ? effects.fatigue : 0;
+          const loyaltyDelta =
+            typeof effects.loyalty === 'number' ? effects.loyalty : 0;
 
-      const newEnergy = clamp(state.energy + energyDelta);
-      const newFatigue = clamp(state.fatigue + fatigueDelta);
+          const { next, meta } = applyStateChanges(state, {
+            energyDelta,
+            fatigueDelta,
+            loyaltyDelta,
+          });
 
-      const updatedState = await tx.userState.update({
-        where: { userId },
-        data: {
-          energy: newEnergy,
-          fatigue: newFatigue,
-          loyalty: state.loyalty + loyaltyDelta, // no clamp
+          const finalState = await tx.userState.update({
+            where: { userId },
+            data: next,
+          });
+
+          return {
+            ok: true,
+            used: { id: tool.id, name: tool.name },
+            remainingQty,
+            state: finalState,
+            meta,
+          };
         },
-      });
-
-      return {
-        ok: true,
-        tool: { id: tool.id, name: tool.name },
-        remainingQty,
-        state: updatedState,
-      };
-    });
+        { isolationLevel: 'Serializable' },
+      );
+    } catch (err: any) {
+      const msg = String(err?.message ?? '').toLowerCase();
+      if (msg.includes('could not serialize')) {
+        throw new ConflictException('concurrent use detected, retry');
+      }
+      throw err;
+    }
   }
 }
