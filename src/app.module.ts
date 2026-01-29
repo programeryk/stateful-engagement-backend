@@ -10,9 +10,14 @@ import { MeController } from './me/me.controller';
 import { MeService } from './me/me.service';
 import { MeModule } from './me/me.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env'], // later: ['.env.test', '.env']
+    }),
     PrismaModule,
     UsersModule,
     StateModule,
