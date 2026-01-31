@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { StateModule } from './state/state.module';
 import { CheckinsModule } from './checkins/checkins.module';
 import { ToolsModule } from './tools/tools.module';
 import { RewardsModule } from './rewards/rewards.module';
@@ -21,7 +20,6 @@ import { AuthModule } from './auth/auth.module';
     }),
     PrismaModule,
     UsersModule,
-    StateModule,
     CheckinsModule,
     ToolsModule,
     RewardsModule,
