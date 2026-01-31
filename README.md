@@ -1,47 +1,90 @@
 # Stateful Engagement Backend
 
-*(aka: Stateful Progression / Streak Engine API) updated project design on 1/20/26*
+*(Stateful Progression / Streak Engine API)*
 
-A RESTful backend API for a **stateful progression and engagement system**.
+A RESTful backend API implementing a **deterministic, stateful progression system**.
 
-The system models a deterministic daily engagement loop:
+The system models a closed daily engagement loop:
 
-> **Auth → Daily check-in → State updates (streak / energy / fatigue / loyalty) → Inventory tools → Use tools to affect state**
+> **Auth → Daily check-in → State updates → Automatic rewards → Tool inventory → Tool usage → State changes**
 
-It is designed as a **rules-driven state machine**, not a toy CRUD app.
+This is **not** a generic CRUD API.
+It is a **rules-driven state machine** where all state transitions are explicit, validated, and enforced transactionally.
 
-All critical operations are enforced at the **database level** using constraints and executed **atomically** using transactions to prevent race conditions and invalid state.
-
-This project is being developed as a **learning-focused, production-style backend**, modeling real-world patterns such as:
-
-* state transitions
-* invariant enforcement
-* idempotent operations
-* transactional updates
-* ownership tracking
-
-> ⚠️ This project is under active development. APIs and internal logic may change.
+The primary focus of the project is **correctness under concurrency**, not feature breadth.
 
 ---
 
-## Core Idea
+## Core Principles
 
-The backend implements a deterministic progression loop:
+* State changes only through **explicit domain actions**
+* No implicit mutations or client-side authority
+* **Database constraints** back application logic
+* All multi-step updates are **atomic**
+* Behavior is deterministic and testable
+* Concurrency safety is treated as a first-class concern
 
-* Users perform **daily check-ins**
-* Each user has a persistent **state**:
+---
 
-  * streak
-  * energy
-  * fatigue
-  * loyalty
-* Check-ins update state using fixed rules
-* Rewards unlock automatically when conditions are met (e.g. streak milestones)
-* Users can acquire **tools** into an inventory
-* Tools can be **used to affect state** (e.g. reduce fatigue, gain energy, etc.)
+## Core Domain Model
 
-There is **no randomness required** in the core loop.
-All behavior is rules-based and testable.
+### User
+
+Authentication identity only.
+
+### UserState (1:1 with User)
+
+Persistent progression state:
+
+* `streak`
+* `energy` (0–100)
+* `fatigue` (0–100)
+* `loyalty` (currency)
+
+UserState is **bootstrapped lazily and idempotently** inside the first state-changing transaction.
+
+---
+
+### DailyCheckIn
+
+One row per user per UTC calendar day.
+
+* Unique per `(userId, date)`
+* Enforced at the database level
+* Used to compute streak progression
+
+---
+
+### Reward
+
+Static catalog (seeded).
+
+* Unlock conditions (e.g. streak ≥ N)
+* Deterministic effects
+* Automatically applied when eligible
+* Applied **once ever per user**
+
+Ownership is tracked via a join table to prevent duplicate application.
+
+---
+
+### ToolDefinition
+
+Static tool catalog (seeded).
+
+* Price (loyalty cost)
+* Deterministic effects on state
+
+---
+
+### UserTool (Inventory)
+
+Per-user inventory of tools.
+
+* Tracks ownership + quantity
+* Unique per `(userId, toolId)`
+* Inventory capacity capped (max 5 unique tools)
+* Tools are **consumable**
 
 ---
 
@@ -49,186 +92,122 @@ All behavior is rules-based and testable.
 
 The system enforces the following rules:
 
-* A user can check in **at most once per calendar day** (UTC).
-* Daily check-ins are unique per `(userId, date)`.
-* All check-ins and state updates happen inside a **single transaction**.
-* State values are clamped to valid ranges:
+* A user may check in **at most once per UTC day**
+* Daily check-ins are unique per `(userId, date)`
+* All state mutations happen inside a **single transaction**
+* State values are clamped:
 
-  * `0 <= energy <= 100`
-  * `0 <= fatigue <= 100`
-  * `streak`
-* Inventory size is capped (e.g. max 5 tools).
+  * `0 ≤ energy ≤ 100`
+  * `0 ≤ fatigue ≤ 100`
+  * `streak ≥ 0`
+  * `loyalty ≥ 0`
+* Rewards are automatically applied and **never applied twice**
 * Tool usage is atomic:
 
-  * state update + inventory update succeed or fail together.
-* Rewards are automatically applied when conditions are met and can only be applied once per user.
+  * inventory update + state update succeed or fail together
+* Inventory capacity limits are enforced transactionally
 
 These invariants are enforced using:
 
 * database constraints
-* transactions
-* validation in the service layer
+* transactional updates
+* service-layer validation
 
 ---
 
-## Key Features
+## API Shape (Command-Based)
 
-* REST API built with **NestJS**
-* **Daily check-in system** with streak tracking
-* Persistent per-user state stored in PostgreSQL
-* Deterministic state transitions
-* **Idempotent user bootstrapping**
-* Protection against duplicate actions using **unique constraints**
-* Atomic state updates using **database transactions**
-* Reward unlock + once-ever application tracking
-* Designed to reflect **real production backend patterns**
+This API exposes **domain commands**, not CRUD.
+
+Examples:
+
+* `POST /checkins`
+* `POST /tools/:toolId/buy`
+* `POST /tools/:toolId/use`
+
+There are intentionally:
+
+* no delete endpoints
+* no admin endpoints
+* no arbitrary state mutation routes
+
+State can only change through defined actions.
+
+---
+
+## Authentication
+
+Authentication is implemented using **JWT access tokens**.
+
+### Public endpoints
+
+* `POST /auth/register`
+* `POST /auth/login`
+* `GET /tools` (tool catalog)
+
+### Protected endpoints (JWT required)
+
+* `GET /me`
+* `POST /checkins`
+* `GET /rewards`
+* `GET /tools/inventory`
+* `POST /tools/:toolId/buy`
+* `POST /tools/:toolId/use`
+
+JWT must be provided via:
+
+```
+Authorization: Bearer <access_token>
+```
+
+> In development only, a header-based dev auth (`X-User-Id`) may be enabled to simplify local testing. Production paths require JWT.
+
+---
+
+## Tool System (v1)
+
+* Tools are defined globally and seeded
+* Users buy tools using loyalty
+* Inventory is capped at **5 unique tool types**
+* Buying an already-owned tool increases quantity
+* Using a tool:
+
+  * consumes one unit
+  * applies effects to UserState
+  * clamps state values
+  * deletes inventory row when quantity reaches zero
+* All tool operations are transactional
+
+---
+
+## Level-Up Logic
+
+Additional state rules (e.g. level-ups triggered by reaching energy thresholds) are handled deterministically inside the same transactional update pipeline as check-ins, rewards, and tool usage.
 
 ---
 
 ## Tech Stack
 
-* **TypeScript**
-* **Node.js**
-* **NestJS**
-* **PostgreSQL**
-* **Prisma ORM**
-* **Docker** (local development)
+* TypeScript
+* Node.js
+* NestJS
+* PostgreSQL
+* Prisma ORM
+* Docker (local development)
 
 ---
 
-## Current Project Status
-
-### Implemented
-
-* Database schema with constraints
-* User bootstrap endpoint
-* Daily check-in logic
-* Streak calculation
-* Unique check-in enforcement (`@@unique([userId, date])`)
-* Atomic transactions for check-ins + state updates
-* Reward definitions
-* Reward unlock logic
-* Reward claiming with duplicate-claim protection
-* Custom dev-auth header guard (`X-User-Id`) for local testing
-
----
-
-### In Progress / Planned (Safe Version Scope)
-
-* JWT authentication (replace header-based dev auth)
-* State updates on check-in:
-
-  * energy
-  * fatigue
-  * loyalty
-* Tool catalog (3 tools, seeded into DB)
-* Inventory system
-* Tool buy / use endpoints
-* Inventory capacity limit
-* Minimal e2e tests
-* README + deployment
-
----
-
-## Domain Flow
-
-1. **Authentication**
-   Users register and log in (JWT planned).
-   All protected routes require authentication.
-
----
-
-2. **Daily Check-in**
-
-Users can check in **once per day (UTC)**.
-
-On success:
-
-* A `DailyCheckIn` row is created.
-* The user’s state is updated in a transaction:
-
-  * streak increment or reset
-  * energy +X
-  * fatigue +X
-  * loyalty +X
-
-Duplicate check-ins are blocked by a DB constraint.
-
----
-
-3. **State**
-
-Each user has a single persistent `UserState`:
-
-* `streak`
-* `energy`
-* `fatigue`
-* `loyalty`
-
-State is updated only through controlled service logic.
-User state is bootstrapped lazily and idempotently: if a user has no UserState, it is created inside the same transaction that performs the first state-changing action.
-
----
-
-4. **Rewards**
-
-* Rewards are defined globally.
-* Each reward has an unlock condition (e.g. streak ≥ 7).
-* Unlocking is automatic and deterministic.
-* Rewards are automatically applied when eligible
-* Applications are tracked in AppliedReward (join table) to ensure once-ever.
-
----
-
-5. **Tools & Inventory**
-
-* Tools are defined in a DB catalog (`ToolDefinition`).
-* Users can buy tools using loyalty.
-* Tools are stored in a per-user inventory.
-* Inventory capacity is capped (e.g. max 5).
-* Tools can be used to apply effects:
-
-  * reduce fatigue
-  * increase energy
-  * increase loyalty
-
-All tool usage is transactional.
-
----
-
-## Database Design Notes
-
-* Unique constraints prevent duplicate check-ins.
-* User state is stored 1:1 with the user.
-* Business rules are enforced as close to the data layer as possible.
-* Transactions prevent partial state updates.
-* Reward ownership is tracked via a join table.
-
----
-
-## Non-goals
-
-This project intentionally does not include:
-- frontend UI
-- real-time updates
-- randomness or probabilistic mechanics
-- background schedulers (cron jobs)
-
-The focus is correctness, determinism, and transactional safety.
-
----
-
-## Getting Started (Local Development)
+## Local Development
 
 ### Prerequisites
 
-* Node.js (v18+ recommended)
+* Node.js (v18+)
 * Docker & Docker Compose
 * npm
 
 ---
 
-### Clone the Repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/programeryk/stateful-engagement-backend
@@ -237,7 +216,7 @@ cd stateful-engagement-backend
 
 ---
 
-### Install Dependencies
+### Install dependencies
 
 ```bash
 npm install
@@ -245,7 +224,7 @@ npm install
 
 ---
 
-### Start the Database
+### Start the database
 
 ```bash
 docker compose up -d
@@ -253,17 +232,18 @@ docker compose up -d
 
 ---
 
-### Configure Environment Variables
+### Configure environment variables
 
 Create a `.env` file in the project root:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/stateful_engagement"
+JWT_SECRET="your_secret_here"
 ```
 
 ---
 
-### Run Database Migrations
+### Run migrations & seed
 
 ```bash
 npx prisma migrate dev
@@ -271,13 +251,13 @@ npx prisma migrate dev
 
 ---
 
-### Start the Application
+### Start the application
 
 ```bash
 npm run start:dev
 ```
 
-API available at:
+API runs at:
 
 ```
 http://localhost:3000
@@ -285,47 +265,76 @@ http://localhost:3000
 
 ---
 
-### Curl example
-
-Right now auth is mocked via a header:
+## Example Flow
 
 ```bash
-X-User-Id: 11111111-1111-1111-1111-111111111111
+# login
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@test.com","password":"password"}'
 ```
 
-Get current user + state
 ```bash
-curl http://localhost:3000/me -H "X-User-Id: 11111111-1111-1111-1111-111111111111"
+# authenticated request
+curl http://localhost:3000/me \
+  -H "Authorization: Bearer <token>"
 ```
+
+---
+
+## Non-Goals
+
+This project intentionally does **not** include:
+
+* frontend UI
+* admin panels or RBAC
+* generic CRUD endpoints
+* real-time updates
+* probabilistic mechanics
+* background schedulers
+
+The focus is **correctness, determinism, and transactional safety**.
+
+---
+
+## Project Status
+
+### Implemented
+
+* JWT authentication
+* Daily check-ins with UTC logic
+* Stateful progression with clamped values
+* Automatic rewards (once-ever)
+* Tool catalog and inventory
+* Tool buy & use transactions
+* Inventory capacity enforcement
+* Level-up rules
+
+### Planned
+
+* Integration tests (concurrency / invariants)
+* API documentation
+* Deployment
+* Rate limiting
 
 ---
 
 ## Why This Project Exists
 
-This is **not** a demo CRUD app.
-
-It exists to practice:
+This project exists to practice:
 
 * designing **stateful backend systems**
-* modeling **domain rules and invariants**
-* enforcing **correctness with constraints**
-* working with **transactions**
-* building APIs that behave deterministically under concurrency
+* modeling **domain invariants**
+* enforcing correctness with **constraints**
+* handling **concurrency safely**
+* building APIs around **domain commands**
 
----
-
-## Future Work
-
-* JWT authentication
-* Tool system (catalog + inventory + use)
-* Automatic reward unlocks without manual claiming
-* Rate limiting
-* API documentation (Swagger / OpenAPI)
-* Deployment (Fly.io / Render)
-* Background jobs (optional)
+It is intended as a **portfolio-grade backend**, not a demo CRUD app.
 
 ---
 
 ## License
 
-This project is for educational and portfolio purposes.
+Educational and portfolio use.
+
+---
