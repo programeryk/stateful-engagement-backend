@@ -1,14 +1,14 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { UserId } from 'src/common/user-id.decorator';
 import { MeService } from './me.service';
 import { JwtGuard } from 'src/auth/jwt.guard';
+import { CurrentUserId } from 'src/common/currentuser-id.decorator';
 
 @UseGuards(JwtGuard)
 @Controller()
 export class MeController {
   constructor(private readonly meSerivce: MeService) {}
   @Get('me')
-  getMe(@UserId() userId: string) {
+  getMe(@CurrentUserId() userId: string) {
     return this.meSerivce.getMe(userId);
   }
 }
