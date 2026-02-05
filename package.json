@@ -18,7 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json",
-    "test:e2e:setup": "prisma migrate reset --force && prisma db seed"
+    "test:e2e:setup": "npx dotenv -e .env.test -- npx prisma migrate reset --force",
+    "test:studio": "npx dotenv -e .env.test -- npx prisma studio",
+    "test:migrate": "npx dotenv -e .env.test -- npx prisma migrate deploy",
+    "test:seed": "npx dotenv -e .env.test -- npx prisma db seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
