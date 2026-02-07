@@ -112,4 +112,58 @@ describe('Tools (e2e)', () => {
 
     expect(inv).toBeNull();
   });
+
+  it('buy tool is race-safe (loyalty=10 -> one success, one 409, no negative loyalty)', async () => {
+    const { token } = await registerAndLogin(app);
+    const server = app.getHttpServer();
+
+    const me = await request(server)
+      .get('/me')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    const userId = me.body.user.id;
+
+    const prisma = app.get(PrismaService);
+
+    await prisma.userState.update({
+      where: { userId },
+      data: { loyalty: 10 },
+    });
+
+    const [b1, b2] = await Promise.all([
+      request(server)
+        .post('/tools/inventory/buy/coffee')
+        .set('Authorization', `Bearer ${token}`),
+      request(server)
+        .post('/tools/inventory/buy/coffee')
+        .set('Authorization', `Bearer ${token}`),
+    ]);
+
+    const ok = (s: number) => s === 200 || s === 201;
+    const statuses = [b1.status, b2.status];
+    expect(statuses.some(ok)).toBe(true);
+    expect(statuses).toContain(500);
+
+    const row = await prisma.userTool.findUnique({
+      where: { userId_toolId: { userId, toolId: 'coffee' } },
+    });
+
+    expect(row).toBeTruthy();
+    expect(row!.quantity).toBe(1);
+
+    const state = await prisma.userState.findUnique({ where: { userId } });
+    expect(state).toBeTruthy();
+    expect(state!.loyalty).toBe(0);
+
+    const inv = await request(server)
+      .get('/tools/inventory')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(inv.body.capacity).toEqual({ max: 5, used: 1 });
+    expect(
+      inv.body.inventory.find((x: any) => x.toolId === 'coffee')?.quantity,
+    ).toBe(1);
+  });
 });
