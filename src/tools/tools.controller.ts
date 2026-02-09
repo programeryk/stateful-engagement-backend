@@ -1,5 +1,10 @@
 import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { ToolsService } from './tools.service';
 import { JwtGuard } from 'src/auth/jwt.guard';
 import { CurrentUserId } from 'src/common/currentuser-id.decorator';
@@ -29,7 +34,10 @@ export class ToolsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Buy a tool with loyalty' })
   @ApiResponse({ status: 201, description: 'Tool purchased' })
-  @ApiResponse({ status: 409, description: 'Not enough loyalty or inventory full' })
+  @ApiResponse({
+    status: 409,
+    description: 'Not enough loyalty or inventory full',
+  })
   buyTool(@CurrentUserId() userId: string, @Param() params: ToolIdParamDto) {
     return this.toolsService.buyTool(userId, params.toolId);
   }
