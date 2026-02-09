@@ -66,18 +66,13 @@ export class CheckinsService {
         let fatigueDelta = baseFatigueGain;
 
         for (const reward of eligibleRewards) {
-          try {
-            // try to mark reward as applied (db enforces once ever)
-            await tx.appliedReward.create({
-              data: { userId, rewardId: reward.id },
-            });
-          } catch (err: any) {
-            if (err?.code === 'P2002') {
-              // already applied (maybe by another concurrent request) -> skip effects
-              continue;
-            }
-            throw err;
-          }
+          // idempotent insert: if already applied, skip without aborting txn
+          const inserted = await tx.appliedReward.createMany({
+            data: [{ userId, rewardId: reward.id }],
+            skipDuplicates: true,
+          });
+
+          if (inserted.count === 0) continue;
 
           // only if we successfully created AppliedReward do we add effects
           const effects = (reward.effects ?? {}) as RewardEffects;
