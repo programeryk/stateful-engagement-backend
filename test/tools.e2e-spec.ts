@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument */
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { registerAndLogin } from './helpers/auth';
 import { PrismaService } from '../src/prisma/prisma.service';
+
+interface InventoryItem {
+  toolId: string;
+  quantity: number;
+}
 
 describe('Tools (e2e)', () => {
   let app: INestApplication;
@@ -48,9 +54,11 @@ describe('Tools (e2e)', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(200);
 
-    const coffee1 = inv1.body.inventory.find((x: any) => x.toolId === 'coffee');
+    const coffee1 = inv1.body.inventory.find(
+      (x: InventoryItem) => x.toolId === 'coffee',
+    );
     expect(coffee1).toBeTruthy();
-    expect(coffee1.quantity).toBeGreaterThanOrEqual(1);
+    expect(coffee1?.quantity).toBeGreaterThanOrEqual(1);
     expect(inv1.body.capacity).toEqual({ max: 5, used: 1 });
 
     await request(server)
@@ -64,7 +72,7 @@ describe('Tools (e2e)', () => {
       .expect(200);
 
     expect(
-      inv2.body.inventory.find((x: any) => x.toolId === 'coffee'),
+      inv2.body.inventory.find((x: InventoryItem) => x.toolId === 'coffee'),
     ).toBeFalsy();
     expect(inv2.body.capacity).toEqual({ max: 5, used: 0 });
     expect(inv2.body.inventory).toHaveLength(0);
@@ -163,7 +171,8 @@ describe('Tools (e2e)', () => {
 
     expect(inv.body.capacity).toEqual({ max: 5, used: 1 });
     expect(
-      inv.body.inventory.find((x: any) => x.toolId === 'coffee')?.quantity,
+      inv.body.inventory.find((x: InventoryItem) => x.toolId === 'coffee')
+        ?.quantity,
     ).toBe(1);
   });
 });

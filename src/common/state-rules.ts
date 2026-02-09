@@ -1,7 +1,7 @@
 // src/common/state-rules.ts
 import { clamp } from './clamp';
 
-type State = {
+export type State = {
   level: number;
   energy: number;
   fatigue: number;

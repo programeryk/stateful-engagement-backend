@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { applyStateChanges } from 'src/common/state-rules';
+import type { State } from 'src/common/state-rules';
 
 @Injectable()
 export class ToolsService {
@@ -94,8 +95,13 @@ export class ToolsService {
         },
         { isolationLevel: 'Serializable' },
       );
-    } catch (err: any) {
-      if (err?.code === 'P2034') {
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === 'object' &&
+        'code' in err &&
+        err.code === 'P2034'
+      ) {
         throw new ConflictException('concurrent buy detected, retry');
       }
       throw err;
@@ -116,6 +122,14 @@ export class ToolsService {
             where: { userId },
           });
           if (!state) throw new NotFoundException('call /me first');
+
+          const typedState: State = {
+            energy: state.energy,
+            fatigue: state.fatigue,
+            loyalty: state.loyalty,
+            streak: state.streak,
+            level: state.level,
+          };
 
           // 3) inventory row exists?
           const inv = await tx.userTool.findUnique({
@@ -140,7 +154,7 @@ export class ToolsService {
           }
 
           // 5) apply effects to state (central rules)
-          const effects = (tool.effects ?? {}) as any;
+          const effects = (tool.effects ?? {}) as Record<string, unknown>;
 
           const energyDelta =
             typeof effects.energy === 'number' ? effects.energy : 0;
@@ -149,7 +163,7 @@ export class ToolsService {
           const loyaltyDelta =
             typeof effects.loyalty === 'number' ? effects.loyalty : 0;
 
-          const { next, meta } = applyStateChanges(state, {
+          const { next, meta } = applyStateChanges(typedState, {
             energyDelta,
             fatigueDelta,
             loyaltyDelta,
@@ -170,8 +184,13 @@ export class ToolsService {
         },
         { isolationLevel: 'Serializable' },
       );
-    } catch (err: any) {
-      if (err?.code === 'P2034') {
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === 'object' &&
+        'code' in err &&
+        err.code === 'P2034'
+      ) {
         throw new ConflictException('concurrent use detected, retry');
       }
       throw err;
