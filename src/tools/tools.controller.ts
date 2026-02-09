@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ToolsService } from './tools.service';
-import { UserId } from 'src/common/user-id.decorator';
 import { JwtGuard } from 'src/auth/jwt.guard';
 import { CurrentUserId } from 'src/common/currentuser-id.decorator';
+import { ToolIdParamDto } from './dto/tool-id-param.dto';
 
 @Controller('tools')
 export class ToolsController {
@@ -18,12 +18,12 @@ export class ToolsController {
   }
   @UseGuards(JwtGuard)
   @Post('inventory/buy/:toolId')
-  buyTool(@CurrentUserId() userId: string, @Param('toolId') toolId: string) {
-    return this.toolsService.buyTool(userId, toolId);
+  buyTool(@CurrentUserId() userId: string, @Param() params: ToolIdParamDto) {
+    return this.toolsService.buyTool(userId, params.toolId);
   }
   @UseGuards(JwtGuard)
   @Post(':toolId/use')
-  useTool(@CurrentUserId() userId: string, @Param('toolId') toolId: string) {
-    return this.toolsService.useTool(userId, toolId);
+  useTool(@CurrentUserId() userId: string, @Param() params: ToolIdParamDto) {
+    return this.toolsService.useTool(userId, params.toolId);
   }
 }
