@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { applyStateChanges } from 'src/common/state-rules';
+import type { State } from 'src/common/state-rules';
 
 @Injectable()
 export class ToolsService {
@@ -122,6 +123,14 @@ export class ToolsService {
           });
           if (!state) throw new NotFoundException('call /me first');
 
+          const typedState: State = {
+            energy: state.energy,
+            fatigue: state.fatigue,
+            loyalty: state.loyalty,
+            streak: state.streak,
+            level: state.level,
+          };
+
           // 3) inventory row exists?
           const inv = await tx.userTool.findUnique({
             where: { userId_toolId: { userId, toolId } },
@@ -154,7 +163,7 @@ export class ToolsService {
           const loyaltyDelta =
             typeof effects.loyalty === 'number' ? effects.loyalty : 0;
 
-          const { next, meta } = applyStateChanges(state, {
+          const { next, meta } = applyStateChanges(typedState, {
             energyDelta,
             fatigueDelta,
             loyaltyDelta,

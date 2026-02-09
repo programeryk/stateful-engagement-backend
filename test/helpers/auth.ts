@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 
