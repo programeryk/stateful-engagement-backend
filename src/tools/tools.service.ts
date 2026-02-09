@@ -94,8 +94,13 @@ export class ToolsService {
         },
         { isolationLevel: 'Serializable' },
       );
-    } catch (err: any) {
-      if (err?.code === 'P2034') {
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === 'object' &&
+        'code' in err &&
+        err.code === 'P2034'
+      ) {
         throw new ConflictException('concurrent buy detected, retry');
       }
       throw err;
@@ -140,7 +145,7 @@ export class ToolsService {
           }
 
           // 5) apply effects to state (central rules)
-          const effects = (tool.effects ?? {}) as any;
+          const effects = (tool.effects ?? {}) as Record<string, unknown>;
 
           const energyDelta =
             typeof effects.energy === 'number' ? effects.energy : 0;
@@ -170,8 +175,13 @@ export class ToolsService {
         },
         { isolationLevel: 'Serializable' },
       );
-    } catch (err: any) {
-      if (err?.code === 'P2034') {
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === 'object' &&
+        'code' in err &&
+        err.code === 'P2034'
+      ) {
         throw new ConflictException('concurrent use detected, retry');
       }
       throw err;

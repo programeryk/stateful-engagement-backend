@@ -1,9 +1,19 @@
 import request from 'supertest';
+import { INestApplication } from '@nestjs/common';
 
-export async function registerAndLogin(app: any, email?: string) {
+interface AuthResponse {
+  token: string;
+  email: string;
+}
+
+export async function registerAndLogin(
+  app: INestApplication,
+  email?: string,
+): Promise<AuthResponse> {
   const em = email ?? `test_${Date.now()}@x.com`;
   const password = 'pass1234';
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const server = app.getHttpServer();
   const registerRes = await request(server)
     .post('/auth/register')
@@ -11,7 +21,9 @@ export async function registerAndLogin(app: any, email?: string) {
 
   if (![200, 201].includes(registerRes.status)) {
     throw new Error(
-      `Register failed: ${registerRes.status} ${JSON.stringify(registerRes.body)}`,
+      `Register failed: ${registerRes.status} ${JSON.stringify(
+        registerRes.body,
+      )}`,
     );
   }
 
@@ -25,10 +37,13 @@ export async function registerAndLogin(app: any, email?: string) {
     );
   }
 
-  const token = loginRes.body?.accessToken;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const token = loginRes.body?.accessToken as string | undefined;
   if (!token) {
     throw new Error(
-      `no accessToken in /auth/login response: ${JSON.stringify(loginRes.body)}`,
+      `no accessToken in /auth/login response: ${JSON.stringify(
+        loginRes.body,
+      )}`,
     );
   }
   return { token, email: em };

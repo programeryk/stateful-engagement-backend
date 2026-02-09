@@ -65,7 +65,8 @@ export class AuthService {
     const ok = await bcrypt.compare(dto.password, user.passwordHash);
     if (!ok) throw new UnauthorizedException('Invalid credentials');
 
-    const { passwordHash: _passwordHash, ...safeUser } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash, ...safeUser } = user;
     const accessToken = await this.signAccessToken(user.id, user.email);
 
     return { user: safeUser, accessToken };

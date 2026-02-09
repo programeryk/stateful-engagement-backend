@@ -109,8 +109,13 @@ export class CheckinsService {
       });
 
       return result;
-    } catch (err: any) {
-      if (err?.code === 'P2002') {
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === 'object' &&
+        'code' in err &&
+        err.code === 'P2002'
+      ) {
         throw new ConflictException('already checked in today.');
       }
       throw err;
