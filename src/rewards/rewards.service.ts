@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -27,9 +22,7 @@ export class RewardsService {
 
     const rewardsWithStatus = rewards.map((reward) => {
       const unlockedNow =
-        reward.type === 'streak'
-          ? userState.streak >= reward.threshold
-          : false;
+        reward.type === 'streak' ? userState.streak >= reward.threshold : false;
 
       const appliedEver = appliedIds.has(reward.id);
 

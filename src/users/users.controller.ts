@@ -1,7 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
-import { UserId } from 'src/common/user-id.decorator';
+import { Controller } from '@nestjs/common';
 
 @Controller('users')
-export class UsersController {
- 
-}
+export class UsersController {}

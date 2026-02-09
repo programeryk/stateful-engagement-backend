@@ -11,12 +11,15 @@ import { MeModule } from './me/me.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { validateEnv } from './config/validate-env';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.test', '.env'],
+      envFilePath:
+        process.env.NODE_ENV === 'test' ? ['.env.test', '.env'] : ['.env'],
+      validate: validateEnv,
     }),
     PrismaModule,
     UsersModule,

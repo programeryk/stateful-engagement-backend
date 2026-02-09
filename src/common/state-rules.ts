@@ -31,9 +31,9 @@ export function applyStateChanges(state: State, deltas: Deltas) {
 
   let nextLevel = state.level;
   let nextEnergy = clamp(state.energy + energyDelta, 0, 100);
-  let nextFatigue = clamp(state.fatigue + fatigueDelta, 0, 100);
-  let nextLoyalty = state.loyalty + loyaltyApplied;
-  let nextStreak = deltas.streak ?? state.streak;
+  const nextFatigue = clamp(state.fatigue + fatigueDelta, 0, 100);
+  const nextLoyalty = state.loyalty + loyaltyApplied;
+  const nextStreak = deltas.streak ?? state.streak;
 
   let leveledUp = false;
   if (nextEnergy >= 100) {

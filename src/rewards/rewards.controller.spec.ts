@@ -8,7 +8,7 @@ describe('RewardsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RewardsController],
-       providers: [
+      providers: [
         {
           provide: RewardsService,
           useValue: {}, // minimal for "defined"
