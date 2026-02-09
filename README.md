@@ -2,9 +2,30 @@
 
 A RESTful backend API for a **deterministic, stateful engagement loop**:
 
-**register/login -> daily check-in -> state updates -> automatic rewards -> buy/use tools (inventory)**
+**register/login → daily check-in → state updates → automatic rewards → buy/use tools (inventory)**
 
 This project is backend-focused and designed to demonstrate **correctness under concurrency** using database constraints, transactions, and explicit invariants — not just CRUD endpoints.
+
+---
+
+## Quick Start
+
+```bash
+# 1. Install and start database
+npm install
+docker compose up -d
+
+# 2. Set up environment
+cp .env.example .env
+
+# 3. Run migrations and seed
+npx prisma migrate dev
+
+# 4. Start development server
+npm run start:dev
+```
+
+API runs at `http://localhost:3000`.
 
 ---
 
@@ -19,6 +40,7 @@ It exists to practice and demonstrate:
 * transactional correctness
 * race-condition handling
 * ownership and once-ever guarantees
+* CI/CD best practices
 
 The emphasis is **correct behavior under concurrent requests**, not feature breadth.
 
@@ -240,6 +262,75 @@ http://localhost:3000
 
 ## Testing
 
+This project uses **Jest** for unit tests and **Supertest** + PostgreSQL for e2e tests. A separate test database ensures isolation.
+
+### Unit Tests
+
+```bash
+npm test
+```
+
+Runs all `*.spec.ts` files. Tests cover:
+- Authentication (register, login, JWT validation)
+- Service layer logic
+- DTO validation
+- Guard behavior
+
+### E2E Tests
+
+E2E tests use a **separate test database** to ensure isolation from development data.
+
+#### Setup (one-time)
+
+```bash
+cp .env.test.example .env.test
+docker compose up -d  # Ensure engagement_test is created
+npm run test:e2e:setup  # prisma migrate reset + seed
+```
+
+#### Run E2E Tests
+
+```bash
+npm run test:e2e
+```
+
+Tests cover:
+- End-to-end workflows (register → checkin → rewards → tools)
+- Concurrency and race conditions
+- Inventory and state consistency
+- Reward idempotence (once-ever guarantee)
+
+### Code Quality
+
+**Linting:**
+```bash
+npm run lint
+```
+
+Linting enforces TypeScript strict mode and ESLint rules. Test files use relaxed unsafe-member-access rules for practical test code (e.g., mocking, response casting).
+
+---
+
+## CI/CD
+
+This project uses **GitHub Actions** for automated testing on every PR and push to `main`.
+
+### Pipeline (`.github/workflows/ci.yml`)
+
+On every push and PR:
+1. Lint (`npm run lint`)
+2. Build (`npm run build`)
+3. Prisma generate (ensure types are current)
+4. Unit tests (`npm test`)
+5. E2E setup (migrate reset + seed on test DB)
+6. E2E tests (`npm run test:e2e`)
+
+The pipeline uses a temporary PostgreSQL service with `engagement_test` database. All steps must pass before merging.
+
+---
+
+## Testing
+
 This project uses a **separate test database**.
 
 ### `.env.test`
@@ -273,12 +364,6 @@ docker exec -it engagement_db \
 npm run test:e2e:setup
 ```
 
-### Run tests
-
-```bash
-npm run test:e2e
-```
-
 ### What the tests prove
 
 * duplicate daily check-ins return **409**
@@ -286,6 +371,68 @@ npm run test:e2e
 * buy/use operations are **race-safe under concurrency**
 * inventory and loyalty never go negative
 * state remains consistent after concurrent requests
+
+---
+
+## Project Structure
+
+```
+src/
+├── auth/              # Authentication (register, login, JWT strategy)
+├── checkins/          # Daily check-in endpoint & logic
+├── rewards/           # Reward queries & application
+├── tools/             # Tool catalog & inventory management
+├── me/                # User profile & state
+├── users/             # User service
+├── common/            # Decorators, guards, utilities
+├── prisma/            # Prisma service
+├── config/            # Environment validation
+└── main.ts            # NestJS bootstrap
+
+test/
+├── app.e2e-spec.ts         # App initialization tests
+├── checkins.e2e-spec.ts    # Check-in workflows
+├── rewards.once-ever.e2e-spec.ts  # Reward idempotence
+├── tools.e2e-spec.ts       # Tool buy/use flows
+└── helpers/           # E2E test utilities
+
+prisma/
+├── schema.prisma      # Database schema
+├── migrations/        # Migration history
+└── seed.ts            # Seed script (2 rewards + 3 tools)
+```
+
+---
+
+## Development Workflow
+
+1. **Create a branch from `main`:**
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make changes**, run tests locally:
+   ```bash
+   npm test                 # Unit tests
+   npm run test:e2e:setup   # Reset test DB
+   npm run test:e2e         # E2E tests
+   npm run lint             # Lint & auto-fix
+   npm run build            # Verify build
+   ```
+
+3. **Commit with conventional messages:**
+   ```bash
+   git commit -m "feat: add feature description"
+   git push origin feature/your-feature-name
+   ```
+
+4. **Open a PR on GitHub.** CI will automatically:
+   - Run lint, build, unit tests, and e2e tests
+   - Report results on the PR
+
+5. **Merge to `main` once CI passes and reviews are approved.**
 
 ---
 
@@ -302,6 +449,64 @@ npm run test:e2e
 
 ---
 
+## Production Deployment
+
+### Docker Build
+
+```bash
+docker build -t engagement-backend:latest -f Dockerfile .
+```
+
+### Environment Variables
+
+Ensure these are set in production:
+- `DATABASE_URL` — PostgreSQL connection string
+- `JWT_SECRET` — Strong random secret (min 32 chars)
+- `JWT_EXPIRES_IN` — Token expiry (e.g., "15m", "7d")
+- `NODE_ENV=production`
+
+### Database Migrations
+
+Run migrations against production database:
+```bash
+npx prisma migrate deploy
+```
+
+**Do not use `prisma migrate reset`** on production (it wipes data).
+
+### Health Check
+
+```bash
+curl http://localhost:3000
+```
+
+---
+
+## Troubleshooting
+
+### Tests fail with "Cannot find database 'engagement_test'"
+
+```bash
+# Create the test database manually:
+docker exec -it engagement_db psql -U app -d postgres -c "CREATE DATABASE engagement_test;"
+
+# Then reset:
+npm run test:e2e:setup
+```
+
+### Lint errors in tests (no-unsafe-*)
+
+Expected and accepted. Test files use loosely-typed response objects from Supertest. This is a pragmatic trade-off for maintainability.
+
+### Port 5432 already in use
+
+```bash
+docker compose down  # Stop existing Postgres
+docker compose up -d # Start fresh
+```
+
+---
+
 ## Non-goals
 
 This project intentionally does **not** include:
@@ -309,7 +514,7 @@ This project intentionally does **not** include:
 * frontend UI
 * admin panels or CRUD dashboards
 * background jobs / schedulers
-* real-time updates
+* real-time updates (WebSockets)
 * probabilistic mechanics
 
 ---
