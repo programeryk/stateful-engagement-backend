@@ -204,7 +204,13 @@ docker compose up -d
 
 ### Environment variables
 
-Create `.env` in project root:
+Create `.env` from the template:
+
+```bash
+cp .env.example .env
+```
+
+Then adjust values as needed:
 
 ```env
 DATABASE_URL="postgresql://app:apppass@localhost:5432/engagement"
@@ -237,6 +243,14 @@ http://localhost:3000
 This project uses a **separate test database**.
 
 ### `.env.test`
+
+Create `.env.test` from the template:
+
+```bash
+cp .env.test.example .env.test
+```
+
+Then adjust values as needed:
 
 ```env
 DATABASE_URL="postgresql://app:apppass@localhost:5432/engagement_test"
