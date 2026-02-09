@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json",
-    "test:e2e:setup": "npx dotenv -e .env.test -- npx prisma migrate reset --force",
+    "test:e2e:setup": "npx dotenv -e .env.test -- npx prisma migrate reset --force && npx dotenv -e .env.test -- npx prisma db seed",
     "test:studio": "npx dotenv -e .env.test -- npx prisma studio",
     "test:migrate": "npx dotenv -e .env.test -- npx prisma migrate deploy",
     "test:seed": "npx dotenv -e .env.test -- npx prisma db seed"
@@ -93,5 +93,8 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     }
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }
