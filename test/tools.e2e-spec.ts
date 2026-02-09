@@ -143,7 +143,7 @@ describe('Tools (e2e)', () => {
     const ok = (s: number) => s === 200 || s === 201;
     const statuses = [b1.status, b2.status];
     expect(statuses.some(ok)).toBe(true);
-    expect(statuses).toContain(500);
+    expect(statuses).toContain(409);
 
     const row = await prisma.userTool.findUnique({
       where: { userId_toolId: { userId, toolId: 'coffee' } },

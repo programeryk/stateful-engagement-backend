@@ -96,8 +96,7 @@ export class ToolsService {
         { isolationLevel: 'Serializable' },
       );
     } catch (err: any) {
-      const msg = String(err?.message ?? '').toLowerCase();
-      if (msg.includes('could not serialize')) {
+      if (err?.code === 'P2034') {
         throw new ConflictException('concurrent buy detected, retry');
       }
       throw err;
@@ -173,8 +172,7 @@ export class ToolsService {
         { isolationLevel: 'Serializable' },
       );
     } catch (err: any) {
-      const msg = String(err?.message ?? '').toLowerCase();
-      if (msg.includes('could not serialize')) {
+      if (err?.code === 'P2034') {
         throw new ConflictException('concurrent use detected, retry');
       }
       throw err;
