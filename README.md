@@ -2,7 +2,7 @@
 
 A RESTful backend API for a **deterministic, stateful engagement loop**:
 
-**register/login → daily check-in → state updates → automatic rewards → buy/use tools (inventory)**
+**register/login -> daily check-in -> state updates -> automatic rewards -> buy/use tools (inventory)**
 
 This project is backend-focused and designed to demonstrate **correctness under concurrency** using database constraints, transactions, and explicit invariants — not just CRUD endpoints.
 
