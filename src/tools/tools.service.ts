@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { clamp } from 'src/common/clamp';
 import { applyStateChanges } from 'src/common/state-rules';
 
 @Injectable()
