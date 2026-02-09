@@ -24,7 +24,7 @@ describe('Checkins (e2e)', () => {
     await request(app.getHttpServer()).post('/checkins').expect(401);
   });
 
-   it('POST /checkins should succeed once and fail second time same day', async () => {
+  it('POST /checkins should succeed once and fail second time same day', async () => {
     const { token } = await registerAndLogin(app);
 
     await request(app.getHttpServer())
