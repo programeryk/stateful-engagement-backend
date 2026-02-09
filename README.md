@@ -4,7 +4,7 @@ A RESTful backend API for a **deterministic, stateful engagement loop**:
 
 **register/login -> daily check-in -> state updates -> automatic rewards -> buy/use tools (inventory)**
 
-This project is backend-focused and designed to demonstrate **correctness under concurrency** using database constraints, transactions, and explicit invariants — not just CRUD endpoints.
+This project is backend-focused and designed to demonstrate **correctness under concurrency** using database constraints, transactions, and explicit invariants - not just CRUD endpoints.
 
 ---
 
@@ -460,9 +460,9 @@ docker build -t engagement-backend:latest -f Dockerfile .
 ### Environment Variables
 
 Ensure these are set in production:
-- `DATABASE_URL` — PostgreSQL connection string
-- `JWT_SECRET` — Strong random secret (min 32 chars)
-- `JWT_EXPIRES_IN` — Token expiry (e.g., "15m", "7d")
+- `DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET` - Strong random secret (min 32 chars)
+- `JWT_EXPIRES_IN` - Token expiry (e.g., "15m", "7d")
 - `NODE_ENV=production`
 
 ### Database Migrations
