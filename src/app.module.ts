@@ -12,6 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { validateEnv } from './config/validate-env';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { validateEnv } from './config/validate-env';
     RewardsModule,
     MeModule,
     AuthModule,
+    HealthModule,
   ],
   controllers: [AppController, MeController],
   providers: [AppService, MeService],
