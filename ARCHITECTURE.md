@@ -1,417 +1,134 @@
 # Architecture
 
-This document describes the architecture of **stateful-engagement-backend** — a rules-driven backend API that implements a deterministic daily progression loop (check-ins → state updates → rewards → tools).
+This document describes the current architecture of `stateful-engagement-backend`.
 
-The project is intentionally designed to model **production-style backend concerns**:
+The system models a deterministic progression loop:
 
-* deterministic state transitions
-* database-enforced invariants
-* transactional correctness under concurrency
-* clean module boundaries
-* testable domain logic
+`auth -> checkin -> state transition -> reward application -> tools/inventory`
 
-> Note: Authentication is currently implemented via a development header guard.
-> JWT-based authentication is planned.
+## Goals
 
----
+- Deterministic state transitions
+- Database-enforced invariants
+- Transactional correctness under concurrency
+- Clear module boundaries and testability
 
-## High-Level Overview
+## Request Flow
 
-The system is a **state machine API**.
-
-User actions are limited, explicit, and deterministic:
-
-* **Daily Check-in** → one state transition per day
-* **Read Rewards** → derived from current state
-* **Buy Tool / Use Tool** → inventory → state transition
-
-At a high level:
-
-```
+```text
 HTTP Request
-  -> Controller (validation + auth context)
+  -> Controller (validation + auth boundary)
     -> Service (domain rules + invariants)
-      -> Prisma (DB reads/writes)
-        -> Postgres (constraints + transactions)
+      -> Prisma (typed data access)
+        -> PostgreSQL (constraints + transactions)
 ```
 
-The database is treated as the **final authority** for correctness:
+## Authentication and Identity
 
-* uniqueness
-* idempotency
-* ownership
-* atomicity
+Authentication is JWT-based.
 
----
+- `AuthModule` exposes register/login.
+- `JwtStrategy` validates bearer tokens and binds identity to `req.user`.
+- Controllers extract the authenticated user id via decorator.
 
-## Modules and Responsibilities
+Identity is never accepted from arbitrary request payloads.
 
-This section maps directly to the current repository layout.
+## Module Responsibilities
 
----
+### `src/auth`
 
-### Auth (dev version)
+- Register/login endpoints
+- Password hashing with bcrypt
+- JWT issuing and validation
 
-**Location:** `src/common`
-**Purpose:** identify the caller and provide a `userId` to downstream logic.
+### `src/me`
 
-* Current implementation:
+- Returns current user profile and state
+- Ensures user state exists via upsert/bootstrap logic
 
-  * custom `X-User-Id` header guard + decorator
-* Planned:
+### `src/checkins`
 
-  * JWT + bcrypt (register/login)
-  * auth guard populates request user context
+- Enforces one check-in per UTC date per user
+- Computes streak changes and applies base/reward deltas
+- Uses transactions and conflict handling for race safety
 
-**Key rule:**
-Domain services never trust raw request input for identity — they only use the authenticated `userId`.
+### `src/rewards`
 
----
+- Returns reward definitions and applied state
+- Supports once-ever reward semantics through `AppliedReward`
 
-### Users / Me Module
+### `src/tools`
 
-**Location:**
+- Lists tool catalog
+- Buys tools with loyalty/capacity constraints
+- Uses tools atomically (inventory + state update)
 
-* `src/users`
-* `src/me`
+### `src/users`
 
-**Purpose:**
+- User-related service/controller utilities used by auth/me flows
 
-* bootstrap users during development
-* return the current user + state
-* act as the identity entry point
+### `src/prisma`
 
-Responsibilities:
+- Prisma service/module and lifecycle management
 
-* ensure a `User` and `UserState` exist
-* expose a `GET /me`-style endpoint
-* avoid embedding domain rule changes here
+### `src/common`
 
----
+- Shared decorators and state rule utilities (`clamp`, state transition helpers)
 
-### State Module
+## Data Model (Prisma)
 
-**Location:** `src/state`
-**Purpose:** expose read-only access to current progression state.
+Core entities:
 
-Responsibilities:
+- `User`
+- `UserState` (1:1, unique `userId`)
+- `DailyCheckIn` (unique `[userId, date]`)
+- `Reward`
+- `AppliedReward` (unique `[userId, rewardId]`)
+- `ToolDefinition`
+- `UserTool` (unique `[userId, toolId]`)
 
-* return the authenticated user’s `UserState`
-* never mutate state directly
+## Invariants
 
-All mutations are owned by:
+Database-level:
 
-* check-ins
-* tools
+- Unique check-in per user/date
+- Unique user state per user
+- Unique applied reward per user/reward
+- Unique user tool row per user/tool
 
-This separation keeps state queries safe and simple.
+Service-level:
 
----
+- Check-ins are once per UTC day
+- Reward application is idempotent/once-ever
+- Tool buy/use operations are transactional and race-safe
+- State values are clamped by shared state rules
 
-### Check-ins Module
+## Transactions and Concurrency
 
-**Location:** `src/checkins`
-**Purpose:** enforce “once per day” progression and apply deterministic state transitions.
+All state mutations run in transactions.
 
-Responsibilities:
+Patterns used:
 
-* determine “today” (rule: **UTC date**)
-* create a `DailyCheckIn` row
-* compute streak based on yesterday’s presence
-* update `UserState` meters
-* wrap all of the above in a single transaction
+- Unique constraints for conflict detection
+- Idempotent inserts where appropriate (`createMany` + `skipDuplicates`)
+- Prisma error code mapping for domain-friendly HTTP responses (`409` on conflicts)
 
-**Correctness is the priority here.**
+## Testing Strategy
 
----
+- Unit tests verify service/controller behavior and guards.
+- E2E tests verify full workflows and race conditions against PostgreSQL.
+- E2E setup resets and seeds test DB to keep tests deterministic.
 
-### Rewards Module (Computed Unlocks Only)
+## CI Design
 
-**Location:** `src/rewards`
-**Purpose:** expose milestone-based progression unlocks.
+CI runs on pushes and PRs to `main` and executes:
 
-Important design choice:
-
-> Rewards are **not claimed or owned**.
-> They are derived automatically from the current state.
-
-Responsibilities:
-
-* store reward definitions (e.g. `streak >= 7`)
-* compute `unlocked: boolean` from `UserState`
-* return reward status to the client
-
-There is no `UserReward` table and no claim endpoint.
-
-This keeps rewards:
-
-* deterministic
-* stateless
-* idempotent
-* race-condition-proof
-
----
-
-### Tools Module
-
-**Location:** `src/tools`
-**Purpose:** define state-changing items.
-
-Responsibilities:
-
-* store tool definitions (`ToolDefinition`)
-* expose tool catalog
-* define cost + effects
-* provide metadata used by inventory + use flows
-
-Tool definitions are seeded into the database.
-
----
-
-### Inventory Module
-
-**Location:** `src/inventory`
-**Purpose:** track per-user owned tools and apply tool effects.
-
-Responsibilities:
-
-* store per-user tool instances
-* enforce inventory capacity (e.g. max 5)
-* buy tools (spend loyalty → add to inventory)
-* use tools (apply effect → remove tool)
-* ensure tool usage is atomic
-
----
-
-## Data Model (Conceptual)
-
-Target “safe version” model:
-
-* `User`
-* `UserState` (1:1 with User)
-
-  * streak
-  * energy
-  * fatigue
-  * loyalty
-* `DailyCheckIn`
-
-  * `(userId, date)` unique
-* `RewardDefinition`
-
-  * unlock conditions (e.g. `streak >= 7`)
-* `ToolDefinition`
-
-  * name
-  * cost
-  * effect type
-  * effect parameters
-* `UserTool`
-
-  * per-user inventory rows
-
----
-
-## Invariants and Where They Live
-
-The system is designed around explicit invariants and layered enforcement.
-
----
-
-### Database-level invariants (hard guarantees)
-
-Enforced in Postgres via Prisma schema constraints:
-
-* **Daily check-in uniqueness**
-
-  * `@@unique([userId, date])`
-  * prevents double check-ins under concurrency
-
-* **UserState 1:1 with User**
-
-  * `@unique(userId)`
-
-* **Tool ownership uniqueness** (if using quantity model)
-
-  * unique `(userId, toolDefinitionId)`
-
-These constraints guarantee correctness even if two requests race.
-
----
-
-### Service-level invariants (business rules)
-
-Enforced in service logic:
-
-* check-in is allowed only once per UTC day
-* streak increments or resets deterministically
-* meters change by fixed deltas
-* clamps:
-
-  * `energy ≥ 0`
-  * `fatigue ≥ 0`
-  * `streak ≥ 0`
-* inventory capacity limit (max N tools)
-* cannot buy tools without enough loyalty
-* cannot use tools you don’t own
-
----
-
-## Transaction Boundaries
-
-Any endpoint that mutates state uses a transaction.
-
----
-
-### Check-in Transaction
-
-One atomic unit:
-
-1. create `DailyCheckIn (userId, today)`
-2. check for yesterday’s check-in
-3. compute new streak
-4. update `UserState` (streak + meters)
-
-If any step fails → nothing commits.
-
----
-
-### Buy Tool Transaction
-
-One atomic unit:
-
-1. read `UserState.loyalty`
-2. validate cost + capacity
-3. decrement loyalty
-4. add tool to inventory
-
----
-
-### Use Tool Transaction
-
-One atomic unit:
-
-1. verify user owns tool
-2. apply effect to `UserState`
-3. decrement/remove tool from inventory
-
-If effect validation fails → inventory is unchanged.
-
----
-
-## Deterministic Rule Engine Approach
-
-This project avoids a generic rules-engine framework.
-
-Instead, rules are implemented as small, explicit functions:
-
-* `computeStreak(hasYesterdayCheckIn, currentStreak)`
-* `applyCheckInDelta(state)`
-* `applyToolEffect(state, toolDefinition)`
-
-Benefits:
-
-* easy to unit test
-* easy to reason about
-* easy to extend
-* no hidden side effects
-
----
-
-## Project Structure (Actual Repo Layout)
-
-```
-src/
-  checkins/
-  common/
-  entities/        (legacy, being removed)
-  inventory/
-  me/
-  prisma/
-    prisma.module.ts
-    prisma.service.ts
-  rewards/
-  state/
-  tools/
-  users/
-
-  app.module.ts
-  main.ts
-```
-
-Prisma:
-
-```
-prisma/
-  migrations/
-  schema.prisma
-  seed.ts
-  migrate-entity-to-userstate.ts
-```
-
----
-
-## Error Handling Strategy
-
-Consistent domain-level HTTP errors:
-
-* `401 Unauthorized` — missing/invalid auth
-* `404 Not Found` — missing user/state/tool
-* `409 Conflict` — duplicate check-in, capacity exceeded
-* `400 Bad Request` — validation failed
-* `500 Internal Server Error` — unexpected
-
-Prisma errors (e.g. `P2002`) are mapped to domain errors.
-
----
-
-## Testing Strategy (Minimal but High-Signal)
-
-### E2E Tests (highest value)
-
-* duplicate check-in blocked
-* streak increments and resets correctly
-* tool buy fails without enough loyalty
-* inventory capacity enforced
-* tool use is atomic
-
----
-
-### Unit Tests
-
-* streak computation
-* meter clamping
-* tool effect application
-
----
-
-## Security Notes
-
-Current dev auth:
-
-* `X-User-Id` header guard
-
-Planned:
-
-* register/login with bcrypt
-* JWT access tokens
-* auth guard populates `userId`
-
-All protected endpoints depend only on authenticated identity.
-
----
-
-## Summary
-
-This backend is designed around a single principle:
-
-> **State transitions must be deterministic, atomic, and protected by invariants.**
-
-It uses:
-
-* database constraints
-* transactions
-* explicit service-layer rules
-* clean module boundaries
-
-…to model a production-style state machine backend.
+1. Install dependencies
+2. Prisma generate
+3. Lint
+4. Build
+5. E2E DB setup (reset + seed)
+6. Unit tests
+7. E2E tests
+
+This sequence ensures generated Prisma types exist before type-aware linting.
