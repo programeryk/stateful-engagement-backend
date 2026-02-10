@@ -20,7 +20,7 @@ async function bootstrap() {
     .setDescription(
       'Deterministic, stateful engagement loop with transactions and invariant enforcement',
     )
-    .setVersion('1.0.0')
+    .setVersion('0.1.0')
     .addBearerAuth()
     .build();
 
