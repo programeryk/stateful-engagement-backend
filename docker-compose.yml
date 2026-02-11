@@ -7,10 +7,26 @@ services:
       POSTGRES_PASSWORD: apppass
       POSTGRES_DB: engagement
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U app -d engagement']
+      interval: 2s
+      timeout: 2s
+      retries: 20
+
+  api:
+    build: .
+    container_name: engagement_api
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env.docker
 
 volumes:
   db_data:

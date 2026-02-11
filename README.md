@@ -11,15 +11,18 @@ The project emphasizes correctness under concurrency using transactions, unique 
 ```bash
 # 1) Install deps and start DB
 npm install
-docker compose up -d
 
 # 2) Configure env
 cp .env.example .env
+cp .env.docker.example .env.docker
 
-# 3) Apply migrations + seed dev DB
+# 3) Start DB + API containers
+docker compose up -d
+
+# 4) Apply migrations + seed dev DB (from host)
 npx prisma migrate dev
 
-# 4) Start API
+# 5) Start API on host (optional if container API is already running)
 npm run start:dev
 ```
 
