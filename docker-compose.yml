@@ -27,6 +27,11 @@ services:
       - '3000:3000'
     env_file:
       - .env.docker
+    healthcheck:
+        test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+        interval: 5s
+        timeout: 3s
+        retries: 5
 
 volumes:
   db_data:

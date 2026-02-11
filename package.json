@@ -24,7 +24,7 @@
     "test:studio": "npx dotenv -e .env.test -- npx prisma studio",
     "test:migrate": "npx dotenv -e .env.test -- npx prisma migrate deploy",
     "test:seed": "npx dotenv -e .env.test -- npx prisma db seed",
-    "bootstrap": "npm install && docker compose up -d && npx prisma generate && npx prisma migrate dev",
+    "bootstrap": "npm install && docker compose up -d --build",
     "test:e2e:all": "npm run test:e2e:setup && npm run test:e2e"
   },
   "dependencies": {
