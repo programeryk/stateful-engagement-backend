@@ -1,13 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { HealthService } from './health.service';
 
 @Controller('health')
 export class HealthController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly healthService: HealthService) {}
 
   @Get()
   async health() {
-    await this.prisma.$queryRaw`SELECT 1`;
-    return { status: 'ok' };
+    return this.healthService.getHealth();
   }
 }

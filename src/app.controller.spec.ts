@@ -16,7 +16,9 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "This is the stateful engagement system!"', () => {
-      expect(appController.getHello()).toBe('This is the stateful engagement system!');
+      expect(appController.getHello()).toBe(
+        'This is the stateful engagement system!',
+      );
     });
   });
 });

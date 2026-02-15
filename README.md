@@ -9,22 +9,30 @@ The project emphasizes correctness under concurrency using transactions, unique 
 ## Quick Start
 
 ```bash
-# 1) Install deps and start DB
+# 1) Install deps
 npm install
-docker compose up -d
 
 # 2) Configure env
 cp .env.example .env
+cp .env.docker.example .env.docker
 
-# 3) Apply migrations + seed dev DB
-npx prisma migrate dev
-
-# 4) Start API
-npm run start:dev
+# 3) Start DB + API containers (API runs migrate deploy on startup)
+docker compose up -d --build
 ```
 
 API: `http://localhost:3000`
 Swagger: `http://localhost:3000/api`
+
+Host-only API workflow (optional):
+
+```bash
+# Start only database in Docker
+docker compose up -d db
+
+# Run migrations from host and start API from host
+npx prisma migrate dev
+npm run start:dev
+```
 
 ## Tech Stack
 
