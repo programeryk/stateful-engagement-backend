@@ -25,7 +25,9 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       validate: validateEnv,
     }),
     ThrottlerModule.forRoot({
-      skipIf: () => process.env.NODE_ENV === 'test',
+      skipIf: () =>
+        process.env.NODE_ENV === 'test' &&
+        process.env.ENABLE_THROTTLE_IN_TEST !== 'true',
       throttlers: [
         {
           name: 'default',
