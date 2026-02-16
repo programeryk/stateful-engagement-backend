@@ -13,6 +13,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { validateEnv } from './config/validate-env';
 import { HealthModule } from './health/health.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -21,6 +23,16 @@ import { HealthModule } from './health/health.module';
       envFilePath:
         process.env.NODE_ENV === 'test' ? ['.env.test', '.env'] : ['.env'],
       validate: validateEnv,
+    }),
+    ThrottlerModule.forRoot({
+      skipIf: () => process.env.NODE_ENV === 'test',
+      throttlers: [
+        {
+          name: 'default',
+          ttl: 60_000,
+          limit: 100,
+        },
+      ],
     }),
     PrismaModule,
     UsersModule,
@@ -32,6 +44,13 @@ import { HealthModule } from './health/health.module';
     HealthModule,
   ],
   controllers: [AppController, MeController],
-  providers: [AppService, MeService],
+  providers: [
+    AppService,
+    MeService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

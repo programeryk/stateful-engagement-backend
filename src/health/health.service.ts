@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import packageJson from '../../package.json'
+import packageJson from '../../package.json';
 
 @Injectable()
 export class HealthService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getHealth() {
     const timestamp = new Date().toISOString();
@@ -15,12 +15,16 @@ export class HealthService {
     try {
       await this.prisma.$queryRaw`SELECT 1`;
     } catch {
-      dbStatus = 'down'
+      dbStatus = 'down';
     }
     return {
-      status: dbStatus === 'up' ? 'ok' : 'degraded', timestamp, uptime, version, services: {
-        database: dbStatus
-      }
+      status: dbStatus === 'up' ? 'ok' : 'degraded',
+      timestamp,
+      uptime,
+      version,
+      services: {
+        database: dbStatus,
+      },
     };
   }
 }
