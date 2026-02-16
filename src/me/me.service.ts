@@ -28,4 +28,22 @@ export class MeService {
 
     return { user, state };
   }
+
+  async grantLoyalty(userId: string, amount: number) {
+    const state = await this.prisma.userState.upsert({
+      where: { userId },
+      update: {
+        loyalty: {
+          increment: amount,
+        },
+      },
+      create: { userId, loyalty: amount },
+    });
+
+    return {
+      ok: true,
+      granted: amount,
+      state,
+    };
+  }
 }
