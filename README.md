@@ -194,6 +194,7 @@ Required env vars:
 - `JWT_SECRET`
 - `JWT_EXPIRES_IN`
 - `NODE_ENV=production`
+- Optional: `RUN_SEED_ON_BOOT=true` to run `prisma db seed` during container startup
 
 Run migrations in production:
 
