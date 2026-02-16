@@ -33,8 +33,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
         error = (r.error as string) ?? error;
       }
     } else if (exception instanceof Error) {
-      message = exception.message;
       error = exception.name;
+    }
+
+    if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      console.error(
+        `[${timestamp}] ${req.method} ${path} -> ${statusCode}`,
+        exception,
+      );
+      message = 'Internal server error';
+      error = 'InternalServerError';
     }
 
     res.status(statusCode).json({

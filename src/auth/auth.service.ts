@@ -25,20 +25,37 @@ export class AuthService {
     if (existing) throw new ConflictException('email already in use');
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
-
-    const user = await this.prisma.user.create({
-      data: {
-        email,
-        passwordHash,
-        state: { create: {} },
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
-      },
-    });
+    let user: {
+      id: string;
+      email: string | null;
+      name: string | null;
+      createdAt: Date;
+    };
+    try {
+      user = await this.prisma.user.create({
+        data: {
+          email,
+          passwordHash,
+          state: { create: {} },
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          createdAt: true,
+        },
+      });
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === 'object' &&
+        'code' in err &&
+        err.code === 'P2002'
+      ) {
+        throw new ConflictException('email already in use');
+      }
+      throw err;
+    }
 
     const accessToken = await this.signAccessToken(user.id, user.email);
     return { user, accessToken };
