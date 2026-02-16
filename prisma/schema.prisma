@@ -63,6 +63,7 @@ model Reward {
   effects     Json? // e.g. {"loyalty": 50, "energy": 10}
 
   applied AppliedReward[]
+  @@index([type, threshold])
 }
 
 model AppliedReward {
