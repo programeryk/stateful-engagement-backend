@@ -12,6 +12,7 @@ The system models a deterministic progression loop:
 - Database-enforced invariants
 - Transactional correctness under concurrency
 - Clear module boundaries and testability
+- Production-safe defaults (rate limiting, secure headers, graceful shutdown)
 
 ## Request Flow
 
@@ -74,6 +75,7 @@ Identity is never accepted from arbitrary request payloads.
 ### `src/common`
 
 - Shared decorators and state rule utilities (`clamp`, state transition helpers)
+- Global exception filter with sanitized 5xx responses
 
 ## Data Model (Prisma)
 
@@ -95,6 +97,12 @@ Database-level:
 - Unique user state per user
 - Unique applied reward per user/reward
 - Unique user tool row per user/tool
+- `CHECK` constraints for:
+  - `UserState.level >= 1`
+  - `UserState.energy/fatigue` in `[0,100]`
+  - non-negative `loyalty`, `streak`, `UserTool.quantity`, `ToolDefinition.price`
+  - positive `Reward.threshold`
+- Index on `Reward(type, threshold)` for eligibility lookups
 
 Service-level:
 
@@ -118,6 +126,10 @@ Patterns used:
 - Unit tests verify service/controller behavior and guards.
 - E2E tests verify full workflows and race conditions against PostgreSQL.
 - E2E setup resets and seeds test DB to keep tests deterministic.
+- Security/integrity e2e tests cover:
+  - register concurrency outcome (`201 + 409`, no `500`)
+  - auth rate limiting (`429`)
+  - DB constraint enforcement on invalid state/inventory writes
 
 ## CI Design
 

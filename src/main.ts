@@ -35,7 +35,14 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Stateful Engagement Backend')
     .setDescription(
-      'Deterministic, stateful engagement loop with transactions and invariant enforcement',
+      [
+        'Deterministic, stateful engagement loop with transactions and invariant enforcement.',
+        '',
+        'How to use this Swagger:',
+        '1) Call POST /auth/register (or /auth/login) to get accessToken.',
+        '2) Click "Authorize" and enter: Bearer <accessToken>.',
+        '3) Call protected endpoints (/me, /checkins, /rewards, /tools/inventory, ...).',
+      ].join('\n'),
     )
     .setVersion('0.1.0')
     .addBearerAuth()

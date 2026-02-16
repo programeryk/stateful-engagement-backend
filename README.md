@@ -23,6 +23,14 @@ docker compose up -d --build
 API: `http://localhost:3000`
 Swagger: `http://localhost:3000/api`
 
+## Using Swagger
+
+1. Open `http://localhost:3000/api`.
+2. Call `POST /auth/register` (or `POST /auth/login`) with email + password.
+3. Copy `accessToken` from response.
+4. Click **Authorize** in Swagger UI and paste: `Bearer <accessToken>`.
+5. Call protected endpoints (`/me`, `/checkins`, `/rewards`, `/tools/inventory`, ...).
+
 Host-only API workflow (optional):
 
 ```bash
@@ -62,6 +70,7 @@ npm run start:dev
 - Inventory has a max unique tool-type capacity
 - Tool use is atomic (inventory + state mutation)
 - State values are clamped by shared state rules
+- Database checks enforce `energy/fatigue` ranges and non-negative values for key counters
 
 ## API Overview
 
@@ -126,6 +135,8 @@ What e2e covers:
 - Reward idempotence (once-ever semantics)
 - Tool buy/use flows end-to-end
 - Concurrency safety for check-in/tool endpoints
+- Auth race safety and rate-limiting behavior
+- DB-level check-constraint enforcement
 
 ## Code Quality
 
@@ -194,6 +205,7 @@ Required env vars:
 - `JWT_SECRET`
 - `JWT_EXPIRES_IN`
 - `NODE_ENV=production`
+- Optional: `CORS_ORIGIN` (comma-separated allowlist)
 - Optional: `RUN_SEED_ON_BOOT=true` to run `prisma db seed` during container startup
 
 Run migrations in production:
