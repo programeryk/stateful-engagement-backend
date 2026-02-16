@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -44,6 +52,7 @@ export class ToolsController {
 
   @UseGuards(JwtGuard)
   @Post(':toolId/use')
+  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Use a tool from inventory' })
   @ApiResponse({ status: 200, description: 'Tool used and effects applied' })

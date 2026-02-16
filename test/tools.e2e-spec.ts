@@ -64,7 +64,7 @@ describe('Tools (e2e)', () => {
     await request(server)
       .post('/tools/coffee/use')
       .set('Authorization', `Bearer ${token}`)
-      .expect(201);
+      .expect(200);
 
     const inv2 = await request(server)
       .get('/tools/inventory')
