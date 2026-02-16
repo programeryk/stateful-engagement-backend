@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiParam,
   ApiTags,
   ApiOperation,
   ApiBearerAuth,
@@ -41,6 +42,12 @@ export class ToolsController {
   @Post('inventory/buy/:toolId')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Buy a tool with loyalty' })
+  @ApiParam({
+    name: 'toolId',
+    required: true,
+    example: 'coffee',
+    description: 'Tool ID from GET /tools (e.g., coffee, rest, focus)',
+  })
   @ApiResponse({ status: 201, description: 'Tool purchased' })
   @ApiResponse({
     status: 409,
@@ -55,6 +62,12 @@ export class ToolsController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Use a tool from inventory' })
+  @ApiParam({
+    name: 'toolId',
+    required: true,
+    example: 'coffee',
+    description: 'Tool ID currently present in user inventory',
+  })
   @ApiResponse({ status: 200, description: 'Tool used and effects applied' })
   @ApiResponse({ status: 409, description: 'Tool not in inventory' })
   useTool(@CurrentUserId() userId: string, @Param() params: ToolIdParamDto) {
