@@ -16,6 +16,10 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { randomUUID } from 'crypto';
 
+const isTest = process.env.NODE_ENV === 'test';
+const isProduction = process.env.NODE_ENV === 'production';
+const isDev = !isProduction && !isTest;
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,18 +30,23 @@ import { randomUUID } from 'crypto';
     }),
     LoggerModule.forRoot({
       pinoHttp: {
-        level:
-          process.env.NODE_ENV === 'test'
-            ? 'silent'
-            : process.env.NODE_ENV === 'production'
-              ? 'info'
-              : 'debug',
-        autoLogging:
-          process.env.NODE_ENV === 'test'
-            ? false
-            : {
-                ignore: (req) => req.url?.startsWith('/health') ?? false,
+        level: isTest ? 'silent' : isProduction ? 'info' : 'debug',
+        transport: isDev
+          ? {
+              target: 'pino-pretty',
+              options: {
+                colorize: true,
+                translateTime: 'SYS:standard',
+                ignore: 'pid,hostname',
+                singleLine: true,
               },
+            }
+          : undefined,
+        autoLogging: isTest
+          ? false
+          : {
+              ignore: (req) => req.url?.startsWith('/health') ?? false,
+            },
         genReqId: (req, res) => {
           const header = req.headers['x-request-id'];
           const requestId =
