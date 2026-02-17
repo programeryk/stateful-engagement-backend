@@ -207,7 +207,7 @@ Required env vars:
 - `JWT_SECRET`
 - `JWT_EXPIRES_IN`
 - `NODE_ENV=production`
-- Optional: `CORS_ORIGIN` (comma-separated allowlist)
+- `CORS_ORIGIN` (comma-separated allowlist, required in production)
 - Optional: `ENABLE_DEV_SIMULATION=true` enables DEV-only endpoint `POST /me/dev/grant-loyalty/:amount` for local testing
 - Optional: `RUN_SEED_ON_BOOT=true` to run `prisma db seed` during container startup
 

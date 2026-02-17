@@ -10,13 +10,24 @@ import { json, urlencoded } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const isProduction = process.env.NODE_ENV === 'production';
+  const corsOriginRaw = process.env.CORS_ORIGIN?.trim() ?? '';
+  const corsOrigins = corsOriginRaw
+    ? corsOriginRaw
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean)
+    : [];
+
+  if (isProduction && corsOrigins.length === 0) {
+    throw new Error('CORS_ORIGIN must be set in production');
+  }
+
   app.enableShutdownHooks();
   app.set('trust proxy', 1);
   app.use(helmet());
   app.enableCors({
-    origin: process.env.CORS_ORIGIN
-      ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
-      : true,
+    origin: corsOrigins.length > 0 ? corsOrigins : true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });

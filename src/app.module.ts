@@ -5,8 +5,6 @@ import { UsersModule } from './users/users.module';
 import { CheckinsModule } from './checkins/checkins.module';
 import { ToolsModule } from './tools/tools.module';
 import { RewardsModule } from './rewards/rewards.module';
-import { MeController } from './me/me.controller';
-import { MeService } from './me/me.service';
 import { MeModule } from './me/me.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
