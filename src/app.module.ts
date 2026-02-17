@@ -26,10 +26,18 @@ import { randomUUID } from 'crypto';
     }),
     LoggerModule.forRoot({
       pinoHttp: {
-        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-        autoLogging: {
-          ignore: (req) => req.url?.startsWith('/health') ?? false,
-        },
+        level:
+          process.env.NODE_ENV === 'test'
+            ? 'silent'
+            : process.env.NODE_ENV === 'production'
+              ? 'info'
+              : 'debug',
+        autoLogging:
+          process.env.NODE_ENV === 'test'
+            ? false
+            : {
+                ignore: (req) => req.url?.startsWith('/health') ?? false,
+              },
         genReqId: (req, res) => {
           const header = req.headers['x-request-id'];
           const requestId =
