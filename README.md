@@ -211,6 +211,12 @@ Required env vars:
 - Optional: `ENABLE_DEV_SIMULATION=true` enables DEV-only endpoint `POST /me/dev/grant-loyalty/:amount` for local testing
 - Optional: `RUN_SEED_ON_BOOT=true` to run `prisma db seed` during container startup
 
+Logging/request correlation:
+
+- Structured JSON logs are enabled via `nestjs-pino`.
+- Every request gets/propagates `x-request-id` and returns it in response headers.
+- Error payloads include `requestId` for easier trace correlation.
+
 Run migrations in production:
 
 ```bash

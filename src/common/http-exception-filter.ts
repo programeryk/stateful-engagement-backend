@@ -7,15 +7,23 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 
+type RequestWithLog = Request & {
+  id?: string;
+  log?: {
+    error: (obj: unknown, msg?: string) => void;
+  };
+};
+
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
-    const req = ctx.getRequest<Request>();
+    const req = ctx.getRequest<RequestWithLog>();
 
     const timestamp = new Date().toISOString();
     const path = req.url;
+    const requestId = req.id;
 
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     let message: unknown = 'Internal server error';
@@ -37,10 +45,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if (statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
-      console.error(
-        `[${timestamp}] ${req.method} ${path} -> ${statusCode}`,
-        exception,
-      );
+      if (req.log) {
+        req.log.error(
+          {
+            err: exception,
+            requestId,
+            method: req.method,
+            path,
+            statusCode,
+          },
+          'Unhandled exception',
+        );
+      } else {
+        console.error(
+          `[${timestamp}] ${req.method} ${path} -> ${statusCode}`,
+          exception,
+        );
+      }
       message = 'Internal server error';
       error = 'InternalServerError';
     }
@@ -51,6 +72,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message,
       path,
       timestamp,
+      requestId,
     });
   }
 }

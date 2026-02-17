@@ -7,9 +7,12 @@ import { HttpExceptionFilter } from './common/http-exception-filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import { json, urlencoded } from 'express';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true,
+  });
   const isProduction = process.env.NODE_ENV === 'production';
   const corsOriginRaw = process.env.CORS_ORIGIN?.trim() ?? '';
   const corsOrigins = corsOriginRaw
@@ -33,6 +36,7 @@ async function bootstrap() {
   });
   app.use(json({ limit: '100kb' }));
   app.use(urlencoded({ extended: true, limit: '100kb' }));
+  app.useLogger(app.get(Logger));
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.useGlobalPipes(
