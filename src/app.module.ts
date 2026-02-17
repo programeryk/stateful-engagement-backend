@@ -45,10 +45,9 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     AuthModule,
     HealthModule,
   ],
-  controllers: [AppController, MeController],
+  controllers: [AppController],
   providers: [
     AppService,
-    MeService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
