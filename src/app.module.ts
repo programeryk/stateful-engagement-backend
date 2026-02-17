@@ -13,6 +13,8 @@ import { validateEnv } from './config/validate-env';
 import { HealthModule } from './health/health.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { LoggerModule } from 'nestjs-pino';
+import { randomUUID } from 'crypto';
 
 @Module({
   imports: [
@@ -21,6 +23,21 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       envFilePath:
         process.env.NODE_ENV === 'test' ? ['.env.test', '.env'] : ['.env'],
       validate: validateEnv,
+    }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+        autoLogging: {
+          ignore: (req) => req.url?.startsWith('/health') ?? false,
+        },
+        genReqId: (req, res) => {
+          const header = req.headers['x-request-id'];
+          const requestId =
+            (Array.isArray(header) ? header[0] : header) ?? randomUUID();
+          res.setHeader('x-request-id', requestId);
+          return requestId;
+        },
+      },
     }),
     ThrottlerModule.forRoot({
       skipIf: () =>
