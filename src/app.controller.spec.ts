@@ -15,9 +15,13 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "This is the stateful engagement system!"', () => {
-      expect(appController.getHello()).toBe(
-        'This is the stateful engagement system!',
+    it('should return API home metadata and quick links', () => {
+      expect(appController.getHome()).toEqual(
+        expect.objectContaining({
+          name: 'Stateful Engagement Backend',
+          docs: '/api',
+          health: '/health',
+        }),
       );
     });
   });
