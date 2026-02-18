@@ -24,6 +24,19 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('This is the stateful engagement system!');
+      .expect({
+        name: 'Stateful Engagement Backend',
+        message: 'API is running. Open /api for Swagger and test endpoints.',
+        version: 'v1',
+        docs: '/api',
+        health: '/health',
+        endpoints: [
+          { name: 'Auth', path: '/auth' },
+          { name: 'Check-ins', path: '/checkins' },
+          { name: 'Tools', path: '/tools' },
+          { name: 'Rewards', path: '/rewards' },
+          { name: 'Profile', path: '/me' },
+        ],
+      });
   });
 });
